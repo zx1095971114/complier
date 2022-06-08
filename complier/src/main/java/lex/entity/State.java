@@ -6,6 +6,8 @@ public enum State {
         public State getNextState(char input) {
             if(input == ' '){
                 return S;
+            } else if (input == '\n') {
+                return S;
             } else if (Character.isLetter(input)) {
                 return M;
             } else if (input == '_') {
@@ -30,6 +32,12 @@ public enum State {
                 return O6;
             } else if (input == '-') {
                 return OP15;
+            } else if (input == '(') {
+                return SE1;
+            } else if (input == ')') {
+                return SE2;
+            } else if (input == ',') {
+                return SE3;
             } else {
                 return ERROR;
             }
@@ -43,7 +51,7 @@ public enum State {
                 return N1;
             } else if (input == '.') {
                 return  N2;
-            } else if (input == ' ') {
+            } else if (!Character.isDigit(input)) {
                 return INT;
             } else{
                 return ERROR;
@@ -56,8 +64,8 @@ public enum State {
         public State getNextState(char input) {
             if(Character.isDigit(input)){
                 return N2;
-            } else if (input == ' ') {
-                return INT;
+            } else if (!Character.isDigit(input)) {
+                return FLOAT;
             } else {
                 return ERROR;
             }
@@ -92,7 +100,7 @@ public enum State {
     S1("S1",false){
         @Override
         public State getNextState(char input) {
-            if(input == '\"'){
+            if(input != '\"'){
                 return S1;
             } else {
                 return STR;
@@ -264,6 +272,27 @@ public enum State {
         }
     },
 
+    SE1("SE1",true){
+        @Override
+        public State getNextState(char input){
+            return null;
+        }
+    },
+
+    SE2("SE2",true){
+        @Override
+        public State getNextState(char input){
+            return null;
+        }
+    },
+
+    SE3("SE3",true){
+        @Override
+        public State getNextState(char input){
+            return null;
+        }
+    },
+
     ERROR("ERROR",true){
         @Override
         public State getNextState(char input) {
@@ -273,10 +302,16 @@ public enum State {
 
     private String name;
     private boolean end;
+    private Token token;
 
     private State(String name, boolean end) {
         this.name = name;
         this.end = end;
+        if(isEnd()){
+            token = new Token();
+        } else {
+            token = null;
+        }
     }
 
     public void setName(String name) {
@@ -293,6 +328,15 @@ public enum State {
 
     public boolean isEnd() {
         return end;
+    }
+
+    public Token getToken() {
+        return token;
+    }
+
+    public void setToken(Token token) {
+        assert this.isEnd();
+        this.token = token;
     }
 
     public abstract State getNextState(char input);
