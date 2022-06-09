@@ -184,6 +184,10 @@ public class LexImpl implements Lex {
                                 token.setType("KW");
                                 token.setSymbol("32");
                                 break;
+                            case "AND":
+                                token.setType("OP");
+                                token.setSymbol("8");
+                                break;
                             case "OR":
                                 token.setType("OP");
                                 token.setSymbol("10");
@@ -271,9 +275,9 @@ public class LexImpl implements Lex {
                         result.add(token);
                         break;
 
-                    case OP13:
+                    case OP16:
                         token.setType("OP");
-                        token.setSymbol("13");
+                        token.setSymbol("16");
                         result.add(token);
                         break;
 
@@ -335,6 +339,33 @@ public class LexImpl implements Lex {
         }
 
         //修改order by和group by
+        int size = result.size();
+        for(int i = 0; i < size; i++){
+//            if(i == 40){
+//                System.out.println("1");
+//            }
+            Token token = result.get(i);
+            if(token.getType().equals("KW")){
+                switch (token.getSymbol()){
+                    case "24":
+                    case "27":
+                         if(i < size - 1) {
+                            Token nextToken = result.get(i + 1);
+                            String content = nextToken.getContent();
+                            if(nextToken.getType().equals("IDN") && content.toUpperCase().equals("BY")){
+                                token.setContent(token.getContent() + " " + nextToken.getContent());
+                                result.remove(i + 1);
+                                size--;
+                            }
+                        } else {
+                             token.setType("IDN");
+                             token.setSymbol(token.getContent());
+                         }
+                        break;
+                }
+            }
+        }
+
 
         return result;
     }

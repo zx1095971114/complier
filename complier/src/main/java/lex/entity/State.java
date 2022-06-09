@@ -25,7 +25,7 @@ public enum State {
             } else if (input == '!') {
                 return O4;
             } else if (input == '.') {
-                return OP13;
+                return OP16;
             } else if (input == '|') {
                 return O5;
             } else if (input == '&') {
@@ -251,7 +251,7 @@ public enum State {
         }
     },
 
-    OP13("OP13",true){
+    OP16("OP16",true){
         @Override
         public State getNextState(char input) {
             return null;
