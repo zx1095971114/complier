@@ -367,6 +367,9 @@ public class LexImpl implements Lex {
         }
 
 
+        for(Token token : result){
+            token.calculateDealing();
+        }
         return result;
     }
 
@@ -385,7 +388,7 @@ public class LexImpl implements Lex {
         while (scanner.hasNextLine()){
             input = input.concat(scanner.nextLine());
         }
-        scanner.close();
+//        scanner.close();
 
 //        System.out.println(input);
         //分析，转成输出字符串

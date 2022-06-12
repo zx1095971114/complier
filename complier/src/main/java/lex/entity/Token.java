@@ -13,10 +13,30 @@ public class Token {
     private String content;
     private String symbol;
 
+    private String dealing;
+
     public Token(String type, String content,String symbol) {
         this.type = type;
         this.content = content;
         this.symbol = symbol;
+
+        calculateDealing();
+    }
+
+    public void calculateDealing(){
+        if(this.type.equals("KW") || this.type.equals("SE") || this.type.equals("OP")){
+            this.dealing = this.content.toUpperCase();
+            if(this.dealing.equals("GROUP BY")){
+                this.dealing = "GROUP_BY";
+            }
+            if(this.dealing.equals("ORDER BY")){
+                this.dealing = "ORDER_BY";
+            }
+        } else if (this.type.equals("STR")) {
+            this.dealing = "STRING";
+        } else {
+            this.dealing = this.type;
+        }
     }
 
     public Token() {
@@ -28,6 +48,10 @@ public class Token {
 
     public String getContent() {
         return content;
+    }
+
+    public String getDealing() {
+        return dealing;
     }
 
     public void setType(String type) {
