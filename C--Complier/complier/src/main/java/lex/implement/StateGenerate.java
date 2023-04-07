@@ -4,10 +4,7 @@ import lex.entity.State;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * @projectName: complier
@@ -19,85 +16,82 @@ import java.util.Scanner;
  * @version: 1.0
  */
 class StateGenerate {
-    List<State> generateNFA() throws FileNotFoundException {
-        List<State> stateList = new LinkedList<>();
-        Scanner scanner = new Scanner(new FileReader("./src/main/resources/initialStateTable.csv"));
-        scanner.nextLine();
+    /**
+     * @param :fileName NFA表文件所在路径
+     * @return List<State>
+     * @author ZhouXiang
+     * @description 获取初始的NFA
+     * @exception
+     */
+    List<State> generateNFA(String fileName) throws FileNotFoundException {
+        List<State> stateList = new ArrayList<>();
+        Scanner scanner = new Scanner(new FileReader(fileName));
+        String[] attribute = null;
+        if(scanner.hasNextLine()){
+            attribute = scanner.nextLine().split(",");
+        }
+
         while (scanner.hasNextLine()){
             String[] line = scanner.nextLine().split(",");
-            int stateId = Integer.parseInt(line[0]);
+            int stateId = -1;
             boolean start = false;
-            boolean end = false;
-            if(line[1].equals("TRUE")){
-                start = true;
-            }
-            if(line[2].equals("TRUE")){
-                end = true;
-            }
-            int[] symbol = new int[24];
-            for(int i = 0; i < 24; i++){
-                symbol[i] = Integer.parseInt(line[i + 3]);
+            String endSymbol = null;
+            //从表中读除了状态转移以外的数据
+            for (int i = 0; i < line.length; i++){
+                switch (attribute[i]){
+                    case "stateId":
+                        stateId = Integer.parseInt(line[i]);
+                        break;
+                    case "start":
+                        if(line[i].equals("TRUE")){
+                            start = true;
+                        }
+                        break;
+                    case "endSymbol":
+                        endSymbol = line[i];
+                        break;
+                    default:
+                }
             }
 
-            State state = new State(stateId, end, start){
+            //取出状态转移的部分
+            int attributeNum = 3;
+            int[] move = new int[line.length - attributeNum];
+            for(int i = 0; i < move.length; i++){
+                move[i] = Integer.parseInt(line[i + attributeNum]);
+            }
+
+            String[] finalAttribute = attribute;
+            State state = new State(stateId, start, endSymbol, Arrays.copyOfRange(finalAttribute, attributeNum, finalAttribute.length)){
                 @Override
+                //处理状态转移
                 public int getNextStateId(char input){
-                    if(Character.isLetter(input)){
-                        return symbol[0];
+                    for(int i = 0; i < move.length; i++){
+                        if (finalAttribute[i + attributeNum].equals("letter")) {
+                            if(Character.isLetter(input)){
+                                return move[i];
+                            }
+                        } else if (finalAttribute[i + attributeNum].equals("digit")) {
+                            if(Character.isDigit(input)){
+                                return move[i];
+                            }
+                        } else {
+                            if(Character.toString(input).equals(finalAttribute[i])){
+                                return move[i];
+                            }
+                        }
                     }
-                    if(Character.isDigit(input)){
-                        return symbol[1];
-                    }
-                    switch (input){
-                        case '_':
-                            return symbol[2];
-                        case '+':
-                            return symbol[3];
-                        case '-':
-                            return symbol[4];
-                        case '*':
-                            return symbol[5];
-                        case '/':
-                            return symbol[6];
-                        case '%':
-                            return symbol[7];
-                        case '=':
-                            return symbol[8];
-                        case '$':
-                            return symbol[9];
-                        case '>':
-                            return symbol[10];
-                        case '<':
-                            return symbol[11];
-                        case '!':
-                            return symbol[12];
-                        case '&':
-                            return symbol[13];
-                        case '|':
-                            return symbol[14];
-                        case '(':
-                            return symbol[15];
-                        case ')':
-                            return symbol[16];
-                        case '{':
-                            return symbol[17];
-                        case '}':
-                            return symbol[18];
-                        case ',':
-                            return symbol[19];
-                        case ';':
-                            return symbol[20];
-                        case ' ':
-                            return symbol[21];
-                        case '\n':
-                            return symbol[22];
-                        default:
-                            return symbol[23];
-                    }
+                    return -1;
                 }
             };
             stateList.add(state);
         }
+
         return stateList;
+    }
+
+    List<State> determineNFA(List<State> nfa){
+        List<State> dfa = new ArrayList<>();
+
     }
 }

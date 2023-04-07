@@ -1,16 +1,23 @@
 package lex.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class State {
-    private int stateId;
-    private boolean start;
-    private boolean end;
+    private int stateId; //状态id
+    private boolean start; //是否为起始状态
+    private String endSymbol; //若为结束状态，则为其对应的标识，否则为NOT_END
+    private String[] moveSymbol; //所有状态转移的符号
 
-    public State(int stateId, boolean end, boolean start) {
+    public State(int stateId, boolean start, String endSymbol, String[] moveSymbol) {
         this.start = start;
         this.stateId = stateId;
-        this.end = end;
+        this.endSymbol = endSymbol;
+        this.moveSymbol = moveSymbol;
+    }
+
+    public String getEndSymbol() {
+        return endSymbol;
     }
 
     public boolean isStart() {
@@ -25,16 +32,27 @@ public class State {
         this.stateId = stateId;
     }
 
-    public void setEnd(boolean end) {
-        this.end = end;
+    public String[] getMoveSymbol() {
+        return moveSymbol;
     }
 
     public int getStateId() {
         return stateId;
     }
 
-    public boolean isEnd() {
-        return end;
+    /**
+     * @param :
+     * @return boolean
+     * @author ZhouXiang
+     * @description 判断是不是终止状态
+     * @exception
+     */
+    public boolean isEnd(){
+        if(this.endSymbol.equals("NOT_END")){
+            return false;
+        }else {
+            return true;
+        }
     }
 
     /**
@@ -66,6 +84,19 @@ public class State {
     }
 
 
+    /**
+     * @param :fa 状态转换机(nfa/dfa)
+     * @return List<State>
+     * @author ZhouXiang
+     * @description 求其空转移的闭包
+     * @exception
+     */
+    public List<State> getBlankMove(List<State> fa){
+        List<State> blankMove = new ArrayList<>();
+        if(this.getNextStateId('$') != 0){
+            blankMove.add(this.getNextState('$', fa));
+        }
+    }
 }
 
 
