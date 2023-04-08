@@ -1,7 +1,6 @@
 package lex.entity;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @projectName: complier
@@ -16,8 +15,24 @@ public class StateList {
     private List<State> states; //集合中包含的状态
     private int stateListId; //状态集合编号0
     private boolean start; //标识有没有起始状态
-    private String endSymbol; //若为结束状态，则为其对应的标识，否则为NOT_END
-    private Map<String, Integer> moveMap; //key为转移符号，value为转移到的状态集合编号
+    private String[] endSymbol; //若为结束状态，则为其对应的标识的数组，否则为null
+    private Map<String, Integer[]> moveMap; //key为转移符号，value为转移到的状态集合编号
+
+    public StateList(List<State> states, int stateListId) {
+        this.states = new ArrayList<>();
+        this.stateListId = stateListId;
+        this.start = false;
+        this.endSymbol = new String[0];
+        this.moveMap = new HashMap<>();
+
+        for(State state: this.states){
+            this.addState(state);
+        }
+    }
+
+    public StateList(List<State> states) {
+        this.states = states;
+    }
 
     public List<State> getStates() {
         return states;
@@ -31,13 +46,95 @@ public class StateList {
         return start;
     }
 
-    public String getEndSymbol() {
+    public String[] getEndSymbol() {
         return endSymbol;
     }
 
-    public Map<String, Integer> getMoveMap() {
+    public Map<String, Integer[]> getMoveMap() {
         return moveMap;
     }
 
+    /**
+     * @param stateList:
+     * @return boolean
+     * @author ZhouXiang
+     * @description 判断一个状态集合是不是和另一个状态集合相同；
+     * @exception 注意比较前要保证两者是针对同一个状态转换机的StateList
+     */
+    public boolean equals(StateList stateList){
+        for(State state: states){
+            if(!stateList.states.contains(state)){
+                return false;
+            }
+        }
+        return true;
+    }
 
+    /**
+     * @param :
+     * @return State
+     * @author ZhouXiang
+     * @description 将该状态集合转为对应的状态
+     * @exception
+     */
+    public State turn2State(){
+        return new State(stateListId, start, endSymbol, moveMap);
+    }
+
+    /**
+     * @param :
+     * @return void
+     * @author ZhouXiang
+     * @description 往该StateList中加入新状态
+     * @exception
+     */
+    public void addState(State state){
+        this.states.add(state);
+        this.endSymbol = Util.joint(endSymbol, state.getEndSymbol());
+        if(state.isStart()){
+            this.start = true;
+        }
+        for(Map.Entry<String, Integer[]> entry: state.getMoveMap().entrySet()){
+            String key = entry.getKey();
+            Integer[] value = entry.getValue();
+            Integer[] newValue = moveMap.getOrDefault(key, new Integer[0]);
+            newValue = Util.joint(newValue, value);
+            moveMap.put(key, newValue);
+        }
+    }
+
+    /**
+     * @param stateList:
+     * @return void
+     * @author ZhouXiang
+     * @description 向其中加入StateList
+     * @exception
+     */
+    public void addStateList(StateList stateList){
+        addStates(stateList.turn2States());
+    }
+
+    /**
+     * @param states:
+     * @return void
+     * @author ZhouXiang
+     * @description 向其中加入List<State>
+     * @exception
+     */
+    public void addStates(List<State> states){
+        for(State state: states){
+            this.addState(state);
+        }
+    }
+
+    /**
+     * @param :
+     * @return List<State>
+     * @author ZhouXiang
+     * @description 转为List<State>
+     * @exception
+     */
+    public List<State> turn2States(){
+        return this.states;
+    }
 }

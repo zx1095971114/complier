@@ -1,6 +1,7 @@
 package lex.implement;
 
 import lex.entity.State;
+import lex.entity.StateList;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -26,7 +27,7 @@ class StateGenerate {
     List<State> generateNFA(String fileName) throws FileNotFoundException {
         List<State> stateList = new ArrayList<>();
         Scanner scanner = new Scanner(new FileReader(fileName));
-        String[] attribute = null;
+        String[] attribute = null; //存所有状态转移表的所有属性，即initialStateTable的第一行
         if(scanner.hasNextLine()){
             attribute = scanner.nextLine().split(",");
         }
@@ -35,7 +36,7 @@ class StateGenerate {
             String[] line = scanner.nextLine().split(",");
             int stateId = -1;
             boolean start = false;
-            String endSymbol = null;
+            String[] endSymbol = new String[0];
             //从表中读除了状态转移以外的数据
             for (int i = 0; i < line.length; i++){
                 switch (attribute[i]){
@@ -48,50 +49,99 @@ class StateGenerate {
                         }
                         break;
                     case "endSymbol":
-                        endSymbol = line[i];
+                        if(!line[i].equals("NOT_END")){
+                            endSymbol = line[i].split("/");
+                        }
                         break;
                     default:
                 }
             }
 
             //取出状态转移的部分
-            int attributeNum = 3;
-            int[] move = new int[line.length - attributeNum];
+            int attributeNum = 3; //State类中除状态转移Map外的属性数
+            Integer[][] move = new Integer[line.length - attributeNum][];
             for(int i = 0; i < move.length; i++){
-                move[i] = Integer.parseInt(line[i + attributeNum]);
+                String[] moveString = line[i + attributeNum].split("/");
+                Integer[] moveInteger = new Integer[moveString.length];
+                for(int j = 0; j < moveInteger.length; j++){
+                    moveInteger[j] = Integer.parseInt(moveString[j]);
+                }
+
+                move[i] = moveInteger;
+            }
+            Map<String, Integer[]> moveMap = new HashMap<>();
+            for(int i = 0; i < move.length; i++){
+                moveMap.put(attribute[i + attributeNum], move[i]);
             }
 
-            String[] finalAttribute = attribute;
-            State state = new State(stateId, start, endSymbol, Arrays.copyOfRange(finalAttribute, attributeNum, finalAttribute.length)){
-                @Override
-                //处理状态转移
-                public int getNextStateId(char input){
-                    for(int i = 0; i < move.length; i++){
-                        if (finalAttribute[i + attributeNum].equals("letter")) {
-                            if(Character.isLetter(input)){
-                                return move[i];
-                            }
-                        } else if (finalAttribute[i + attributeNum].equals("digit")) {
-                            if(Character.isDigit(input)){
-                                return move[i];
-                            }
-                        } else {
-                            if(Character.toString(input).equals(finalAttribute[i])){
-                                return move[i];
-                            }
-                        }
-                    }
-                    return -1;
-                }
-            };
+            State state = new State(stateId, start, endSymbol, moveMap);
+
             stateList.add(state);
         }
 
         return stateList;
     }
 
+    /**
+     * @param nfa:
+     * @return List<State>
+     * @author ZhouXiang
+     * @description 将NFA确定化
+     * @exception
+     */
     List<State> determineNFA(List<State> nfa){
-        List<State> dfa = new ArrayList<>();
+        List<StateList> dfa1 = new ArrayList<>();
 
+        List<State> begin = new ArrayList<>();
+        //找到初始状态集合
+        for(State state: nfa){
+            if(state.isStart()){
+                begin.add(state);
+            }
+        }
+
+        bfs(new StateList(begin, 0), dfa1, 1, nfa);
+
+        //将StateList转为State
+        List<State> dfa = new ArrayList<>();
+        for(StateList stateList: dfa1){
+            dfa.add(stateList.turn2State());
+        }
+
+        return dfa;
     }
+
+    //广度优先搜索整个nfa
+    private void bfs(StateList stateList, List<StateList> result, int id, List<State> fa){
+        List<StateList> tempStateList = new ArrayList<>(); //暂存一行中状态转移的StateList
+
+        //获得暂存的一行的状态转移的StateList
+        State state0 = stateList.getStates().get(0);
+        String[] inputs = state0.getMoveMap().keySet().toArray(new String[0]);
+        for(String input: inputs){
+            List<State> states = new ArrayList<>();
+            for(State state: stateList.getStates()){
+                states.addAll(state.getMove(fa, input));
+            }
+        }
+
+        //判断每一个StateList是否已经在收集的结果里了
+        for(StateList list: tempStateList){
+            boolean isRepeat = false;
+            for(StateList stateList1: result){
+                if(stateList1.equals(list)){
+                    isRepeat = true;
+                    break;
+                }
+            }
+
+            if(!isRepeat){
+                result.add(list);
+                id++;
+                bfs(list, result, id, fa);
+            }
+        }
+    }
+
+
 }
