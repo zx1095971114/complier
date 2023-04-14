@@ -9,5 +9,8 @@
         <module name="complier" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="complier" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

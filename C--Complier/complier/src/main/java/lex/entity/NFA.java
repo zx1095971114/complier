@@ -1,7 +1,4 @@
-package lex.implement;
-
-import lex.entity.State;
-import lex.entity.StateList;
+package lex.entity;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -9,22 +6,106 @@ import java.util.*;
 
 /**
  * @projectName: complier
- * @package: lex.implement
- * @className: StateGenerate
+ * @package: lex.entity
+ * @className: NFA
  * @author: Zhou xiang
- * @description: 状态转换图的初始化
- * @date: 2023/4/7 17:30
+ * @description: nfa实体
+ * @date: 2023/4/8 16:01
  * @version: 1.0
  */
-class StateGenerate {
+public class NFA {
+    private List<State> allStates; //所有状态的集合
+    private String[] alpha; //字母表
+    private List<Map<String, Integer[]>> functionList; //状态转化表，因为是NFA，所以一个输入字符可能对应多个输出
+    private List<State> startStates; //初始状态集合
+    private List<State> endStates; //终止状态集合
+
+    private NFA(){
+        allStates = new ArrayList<>();
+        alpha = new String[0];
+        functionList = new ArrayList<>();
+        startStates = new ArrayList<>();
+        endStates = new ArrayList<>();
+    }
+
+    /**
+     * @param states:
+     * @return NFA
+     * @author ZhouXiang
+     * @description 获取一个nfa实例
+     * @exception
+     */
+    public static NFA getNFAInstance(List<State> states){
+        NFA nfa = new NFA();
+        nfa.allStates = states;
+
+        assert states != null;
+        State state = states.get(0);
+        nfa.alpha = state.getMoveMap().keySet().toArray(new String[0]);
+
+        for(State state1: states){
+            nfa.functionList.add(state1.getMoveMap());
+            if(state1.isStart()){
+                nfa.startStates.add(state1);
+            }
+            if(state1.isEnd()){
+                nfa.endStates.add(state1);
+            }
+        }
+
+        return nfa;
+    }
+
+    public List<State> getAllStates() {
+        return allStates;
+    }
+
+    public String[] getAlpha() {
+        return alpha;
+    }
+
+    public List<Map<String, Integer[]>> getFunctionList() {
+        return functionList;
+    }
+
+    public List<State> getStartStates() {
+        return startStates;
+    }
+
+    public List<State> getEndStates() {
+        return endStates;
+    }
+
+    /**
+     * @param origin:
+     * @param input:
+     * @return State
+     * @author ZhouXiang
+     * @description 在nfa中，遇到输入input，应该返回的状态集合
+     * @exception
+     */
+    public StateList move(State origin, String input){
+        int originId = origin.getStateId();
+        Map<String, Integer[]> map = this.functionList.get(originId - 1);
+        Integer[] stateInteger = map.get(input);
+
+        List<State> resultList = new ArrayList<>();
+        for (Integer id: stateInteger){
+            State s = Util.getStateById(id, allStates);
+            resultList.add(s);
+        }
+
+        return new StateList(resultList);
+    }
+
     /**
      * @param :fileName NFA表文件所在路径
-     * @return List<State>
+     * @return NFA
      * @author ZhouXiang
      * @description 获取初始的NFA
      * @exception
      */
-    List<State> generateNFA(String fileName) throws FileNotFoundException {
+    public static NFA generateNFA(String fileName) throws FileNotFoundException {
         List<State> stateList = new ArrayList<>();
         Scanner scanner = new Scanner(new FileReader(fileName));
         String[] attribute = null; //存所有状态转移表的所有属性，即initialStateTable的第一行
@@ -49,9 +130,7 @@ class StateGenerate {
                         }
                         break;
                     case "endSymbol":
-                        if(!line[i].equals("NOT_END")){
-                            endSymbol = line[i].split("/");
-                        }
+                        endSymbol = line[i].split("/");
                         break;
                     default:
                 }
@@ -79,8 +158,9 @@ class StateGenerate {
             stateList.add(state);
         }
 
-        return stateList;
+        return NFA.getNFAInstance(stateList);
     }
+
 
     /**
      * @param nfa:
@@ -89,40 +169,32 @@ class StateGenerate {
      * @description 将NFA确定化
      * @exception
      */
-    List<State> determineNFA(List<State> nfa){
+    public DFA determineNFA(){
         List<StateList> dfa1 = new ArrayList<>();
 
-        List<State> begin = new ArrayList<>();
-        //找到初始状态集合
-        for(State state: nfa){
-            if(state.isStart()){
-                begin.add(state);
-            }
-        }
-
-        bfs(new StateList(begin, 0), dfa1, 1, nfa);
+        StateList beginList = new StateList(startStates).moveWithBlank(this);
+        dfa1.add(beginList);
+        bfs(beginList, dfa1);
 
         //将StateList转为State
         List<State> dfa = new ArrayList<>();
+        int cnt = 1;
         for(StateList stateList: dfa1){
+            stateList.setStateListId(cnt);
+            cnt++;
             dfa.add(stateList.turn2State());
         }
 
-        return dfa;
+        return DFA.getDFAInstance(dfa);
     }
 
     //广度优先搜索整个nfa
-    private void bfs(StateList stateList, List<StateList> result, int id, List<State> fa){
+    private void bfs(StateList stateList, List<StateList> result){
         List<StateList> tempStateList = new ArrayList<>(); //暂存一行中状态转移的StateList
 
-        //获得暂存的一行的状态转移的StateList
-        State state0 = stateList.getStates().get(0);
-        String[] inputs = state0.getMoveMap().keySet().toArray(new String[0]);
-        for(String input: inputs){
-            List<State> states = new ArrayList<>();
-            for(State state: stateList.getStates()){
-                states.addAll(state.getMove(fa, input));
-            }
+        //求该stateList的所有a弧转换
+        for(String input: alpha){
+            tempStateList.add(stateList.moveWithInput(input, this));
         }
 
         //判断每一个StateList是否已经在收集的结果里了
@@ -137,11 +209,8 @@ class StateGenerate {
 
             if(!isRepeat){
                 result.add(list);
-                id++;
-                bfs(list, result, id, fa);
+                bfs(list, result);
             }
         }
     }
-
-
 }

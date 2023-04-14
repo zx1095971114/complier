@@ -31,7 +31,15 @@ public class StateList {
     }
 
     public StateList(List<State> states) {
-        this.states = states;
+        this.states = new ArrayList<>();
+        this.stateListId = 0;
+        this.start = false;
+        this.endSymbol = new String[0];
+        this.moveMap = new HashMap<>();
+
+        for(State state: this.states){
+            this.addState(state);
+        }
     }
 
     public List<State> getStates() {
@@ -48,6 +56,10 @@ public class StateList {
 
     public String[] getEndSymbol() {
         return endSymbol;
+    }
+
+    public void setStateListId(int stateListId) {
+        this.stateListId = stateListId;
     }
 
     public Map<String, Integer[]> getMoveMap() {
@@ -89,6 +101,10 @@ public class StateList {
      * @exception
      */
     public void addState(State state){
+        if(states.contains(state)){
+            return;
+        }
+
         this.states.add(state);
         this.endSymbol = Util.joint(endSymbol, state.getEndSymbol());
         if(state.isStart()){
@@ -136,5 +152,108 @@ public class StateList {
      */
     public List<State> turn2States(){
         return this.states;
+    }
+
+    /**
+     * @param input:
+     * @return StateList
+     * @author ZhouXiang
+     * @description 面对某输出，在dfa中，除空弧转换以外的其他弧转换(注意结果中不能有重复的状态，且空弧的转换方式不同，空弧要找到没有新增状态为止)
+     * @exception
+     */
+    public StateList moveWithInput(String input, DFA dfa){
+        assert !input.equals("$");
+        Set<State> stateSet = new HashSet<>();
+
+        Integer[] stateIntegers = moveMap.get(input);
+        for(Integer stateInteger: stateIntegers){
+            stateSet.add(Util.getStateById(stateInteger, dfa.getAllStates()));
+        }
+
+        StateList list = new StateList(new ArrayList<>(stateSet));//没有加空弧转换的List
+
+        list.addStateList(list.moveWithBlank(dfa));
+
+        return list;
+    }
+
+    /**
+     * @param input: 面对的输入
+     * @param dfa: 所在的dfa
+     * @return StateList
+     * @author ZhouXiang
+     * @description 面对某输出，在dfa中的空弧转换
+     * @exception
+     */
+    public StateList moveWithBlank(DFA dfa){
+        Set<State> stateSet = new HashSet<>();
+        for (State state: states){
+            Queue<State> queue = new LinkedList<>(); //用队列来消除递归
+            queue.offer(state);
+
+            while (!queue.isEmpty()){
+                State stackState = queue.poll();
+                State nextState = dfa.move(stackState, "$");
+                if(!stateSet.contains(nextState)){
+                    stateSet.add(nextState);
+                    queue.offer(nextState);
+                }
+            }
+        }
+
+        return new StateList(new ArrayList<>(stateSet));
+    }
+
+    /**
+     * @param input: 面对的输入
+     * @param nfa: 所在的nfa
+     * @return StateList
+     * @author ZhouXiang
+     * @description 面对某输出，在nfa中的空弧转换
+     * @exception
+     */
+    public StateList moveWithBlank(NFA nfa){
+        Set<State> stateSet = new HashSet<>();
+        for (State state: states){
+            Queue<State> queue = new LinkedList<>(); //用队列来消除递归
+            queue.offer(state);
+
+            while (!queue.isEmpty()){
+                State stackState = queue.poll();
+                StateList nextStates = nfa.move(stackState, "$");
+                List<State> nexts = nextStates.getStates();
+                for(State nextState: nexts){
+                    if(!stateSet.contains(nextState)){
+                        stateSet.add(nextState);
+                        queue.offer(nextState);
+                    }
+                }
+            }
+        }
+
+        return new StateList(new ArrayList<>(stateSet));
+    }
+
+    /**
+     * @param input:
+     * @return StateList
+     * @author ZhouXiang
+     * @description 面对某输出，在nfa中，除空弧转换以外的其他弧转换(注意结果中不能有重复的状态，且空弧的转换方式不同，空弧要找到没有新增状态为止)
+     * @exception
+     */
+    public StateList moveWithInput(String input, NFA nfa){
+        assert !input.equals("$");
+        Set<State> stateSet = new HashSet<>();
+
+        Integer[] stateIntegers = moveMap.get(input);
+        for(Integer stateInteger: stateIntegers){
+            stateSet.add(Util.getStateById(stateInteger, nfa.getAllStates()));
+        }
+
+        StateList list = new StateList(new ArrayList<>(stateSet));//没有加空弧转换的List
+
+        list.addStateList(list.moveWithBlank(nfa));
+
+        return list;
     }
 }

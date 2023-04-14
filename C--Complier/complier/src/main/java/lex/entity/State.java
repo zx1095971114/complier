@@ -17,6 +17,10 @@ public class State {
         this.moveMap = moveMap;
     }
 
+    public void setStateId(int stateId) {
+        this.stateId = stateId;
+    }
+
     public String[] getEndSymbol() {
         return endSymbol;
     }
@@ -41,7 +45,7 @@ public class State {
      * @exception
      */
     public boolean isEnd(){
-        if(this.endSymbol.equals("NOT_END")){
+        if(this.endSymbol[0].equals("NOT_END")){
             return false;
         }else {
             return true;

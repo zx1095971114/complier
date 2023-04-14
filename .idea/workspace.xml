@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="9fb797f0-e2c0-4de1-9dc6-730605a191ce" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/C--Complier/complier/target/classes/lex/entity/DFA.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/C--Complier/complier/target/classes/lex/entity/NFA.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/C--Complier/complier/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/C--Complier/complier/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/C--Complier/complier/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/C--Complier/complier/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/C--Complier/complier/.idea/jarRepositories.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/C--Complier/complier/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/C--Complier/complier/.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/C--Complier/complier/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/C--Complier/complier/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/C--Complier/complier/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/C--Complier/complier/src/main/java/lex/entity/State.java" beforeDir="false" afterPath="$PROJECT_DIR$/C--Complier/complier/src/main/java/lex/entity/State.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/C--Complier/complier/src/main/java/lex/entity/StateList.java" beforeDir="false" afterPath="$PROJECT_DIR$/C--Complier/complier/src/main/java/lex/entity/StateList.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/C--Complier/complier/src/main/java/lex/implement/StateGenerate.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/C--Complier/complier/src/main/resources/initialStateTable.csv" beforeDir="false" afterPath="$PROJECT_DIR$/C--Complier/complier/src/main/resources/initialStateTable.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/C--Complier/complier/src/main/resources/新建 XLSX 工作表.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/C--Complier/complier/src/main/resources/新建 XLSX 工作表.xlsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/C--Complier/complier/src/test/java/myTest/First" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/C--Complier/complier/src/test/java/myTest/FirstAndFollow" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/C--Complier/complier/src/test/java/myTest/SQL--词法语法分析规范输入输出-v2.1.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/C--Complier/complier/src/test/java/myTest/SQL--词法语法分析规范输入输出-v2.1/Readme.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/C--Complier/complier/src/test/java/myTest/SQL--词法语法分析规范输入输出-v2.1/测试用例A/0Agra.tsv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/C--Complier/complier/src/test/java/myTest/SQL--词法语法分析规范输入输出-v2.1/测试用例A/0Alex.tsv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/C--Complier/complier/src/test/java/myTest/SQL--词法语法分析规范输入输出-v2.1/测试用例A/test0A.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/C--Complier/complier/src/test/java/myTest/SQL--词法语法分析规范输入输出-v2.1/测试用例B/0Bgra.tsv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/C--Complier/complier/src/test/java/myTest/SQL--词法语法分析规范输入输出-v2.1/测试用例B/0Blex.tsv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/C--Complier/complier/src/test/java/myTest/SQL--词法语法分析规范输入输出-v2.1/测试用例B/test0B.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/C--Complier/complier/src/test/java/myTest/table.tsv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/C--Complier/complier/src/test/java/myTest/testA/grammarTest1.tsv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/C--Complier/complier/src/test/java/myTest/testA/lexTest01.tsv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/C--Complier/complier/src/test/java/myTest/testA/lexTest1.tsv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/C--Complier/complier/src/test/java/myTest/testA/test1.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/C--Complier/complier/src/test/java/myTest/testA/yaccTest1.tsv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/C--Complier/complier/src/test/java/myTest/testB/lexTest2.tsv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/C--Complier/complier/src/test/java/myTest/testB/test2.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/C--Complier/complier/src/test/java/myTest/testB/yaccTest2.tsv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/C--Complier/complier/target/classes/initialStateTable.csv" beforeDir="false" afterPath="$PROJECT_DIR$/C--Complier/complier/target/classes/initialStateTable.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/C--Complier/complier/target/classes/lex/entity/State.class" beforeDir="false" afterPath="$PROJECT_DIR$/C--Complier/complier/target/classes/lex/entity/State.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/C--Complier/complier/target/classes/lex/entity/StateList.class" beforeDir="false" afterPath="$PROJECT_DIR$/C--Complier/complier/target/classes/lex/entity/StateList.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/C--Complier/complier/target/classes/lex/entity/Util.class" beforeDir="false" afterPath="$PROJECT_DIR$/C--Complier/complier/target/classes/lex/entity/Util.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/C--Complier/complier/target/classes/lex/implement/StateGenerate.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/C--Complier/complier/target/classes/新建 XLSX 工作表.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/C--Complier/complier/target/classes/新建 XLSX 工作表.xlsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/C--Complier/文档/~$23春季编译原理大作业.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/C--Complier/文档/初始状态转换图.png" beforeDir="false" afterPath="$PROJECT_DIR$/C--Complier/文档/初始状态转换图.png" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="C:/ProgrammingTools/Maven/apache-maven-3.8.5" />
+        <option name="useMavenConfig" value="true" />
+        <option name="userSettingsFile" value="C:\ProgrammingTools\Maven\apache-maven-3.8.5\conf\settings.xml" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="2OPK4E0m9hphM5mdn0ejrsx7x7B" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "D:/大学/课程/编译原理/My大作业/C--Complier",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "MavenSettings"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="9fb797f0-e2c0-4de1-9dc6-730605a191ce" name="Changes" comment="" />
+      <created>1681456583512</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1681456583512</updated>
+      <workItem from="1681456586687" duration="464000" />
+      <workItem from="1681457067215" duration="68000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
