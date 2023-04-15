@@ -22,6 +22,9 @@ public class Util {
      * @exception
      */
     public static State getStateById(int id, List<State> states){
+        if(id <= 0 || id > states.size()){
+            return null;
+        }
         for(State state: states){
             if(state.getStateId() == id){
                 return state;
@@ -29,6 +32,24 @@ public class Util {
         }
 
         return null;
+    }
+
+    /**
+     * @param stateList:
+     * @param list:
+     * @return int
+     * @author ZhouXiang
+     * @description 在一组已经编好号的StateList中，找到某一个stateList的id
+     * @exception 注意在使用这个方法时，stateList的状态是已经确定的，但是id是不确定的,返回0意味着该stateList不在list中
+     */
+    public static int getStateListId(StateList stateList, List<StateList> list){
+        for (StateList temp: list){
+            if(temp.equals(stateList)){
+                return temp.getStateListId();
+            }
+        }
+
+        return 0;
     }
 
     /**
@@ -71,3 +92,4 @@ public class Util {
         return str;
     }
 }
+

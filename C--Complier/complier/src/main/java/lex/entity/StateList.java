@@ -16,6 +16,8 @@ public class StateList {
     private int stateListId; //状态集合编号0
     private boolean start; //标识有没有起始状态
     private String[] endSymbol; //若为结束状态，则为其对应的标识的数组，否则为null
+
+    //注意，这里的状态转移与a弧转换不同，只是简单的将所有状态的状态转移加和，没有算加和的空弧转换
     private Map<String, Integer[]> moveMap; //key为转移符号，value为转移到的状态集合编号
 
     public StateList(List<State> states, int stateListId) {
@@ -37,7 +39,7 @@ public class StateList {
         this.endSymbol = new String[0];
         this.moveMap = new HashMap<>();
 
-        for(State state: this.states){
+        for(State state: states){
             this.addState(state);
         }
     }
@@ -62,9 +64,6 @@ public class StateList {
         this.stateListId = stateListId;
     }
 
-    public Map<String, Integer[]> getMoveMap() {
-        return moveMap;
-    }
 
     /**
      * @param stateList:
@@ -74,23 +73,36 @@ public class StateList {
      * @exception 注意比较前要保证两者是针对同一个状态转换机的StateList
      */
     public boolean equals(StateList stateList){
-        for(State state: states){
-            if(!stateList.states.contains(state)){
-                return false;
-            }
-        }
-        return true;
+        return stateList.getStates().equals(states);
     }
 
     /**
      * @param :
      * @return State
      * @author ZhouXiang
-     * @description 将该状态集合转为对应的状态
-     * @exception
+     * @description 在要变为State的StateList和StateList来源的NFA中，将该状态集合转为对应的状态
+     * @exception 要求raw中的StateList已经编好号了
      */
-    public State turn2State(){
-        return new State(stateListId, start, endSymbol, moveMap);
+    public State turn2State(List<StateList> raw, NFA nfa){
+        Map<String, Integer[]> stateMap = new HashMap<>();
+        Set<String> alphas = moveMap.keySet();
+        for(String alpha: alphas){
+            StateList stateList = null;
+            if(alpha.equals("$")){
+                //注意，空弧转换会包括自身，但是在StateList转为State时，经"$"不能包括自身
+                stateList = this.moveWithBlankWithoutSelf(nfa);
+
+            } else {
+                stateList = this.moveWithInput(alpha, nfa);
+            }
+
+            Integer[] integers = new Integer[1];
+            integers[0] = Util.getStateListId(stateList, raw);
+
+            stateMap.put(alpha, integers);
+        }
+
+        return new State(stateListId, start, endSymbol, stateMap);
     }
 
     /**
@@ -106,15 +118,40 @@ public class StateList {
         }
 
         this.states.add(state);
+
         this.endSymbol = Util.joint(endSymbol, state.getEndSymbol());
+        Set<String> set = new HashSet<>();
+        Collections.addAll(set, endSymbol);
+        if(set.size() >= 2){
+            Iterator<String> it = set.iterator();
+            while (it.hasNext()){
+                String str = it.next();
+                if(str.equals("NOT_END")){
+                    it.remove();
+                }
+            }
+        }
+        this.endSymbol = set.toArray(new String[0]);
+
         if(state.isStart()){
             this.start = true;
         }
-        for(Map.Entry<String, Integer[]> entry: state.getMoveMap().entrySet()){
+
+        //要记得加上它状态转以后状态的空弧转换
+         for(Map.Entry<String, Integer[]> entry: state.getMoveMap().entrySet()){
             String key = entry.getKey();
             Integer[] value = entry.getValue();
             Integer[] newValue = moveMap.getOrDefault(key, new Integer[0]);
+
+            //加状态转移后的状态
             newValue = Util.joint(newValue, value);
+            //newValue进行去重复和多余的0
+            Set<Integer> set1 = new HashSet<>(Arrays.asList(newValue));
+            if(set1.size() != 1){
+                set1.remove(0);
+            }
+            newValue = set1.toArray(new Integer[0]);
+
             moveMap.put(key, newValue);
         }
     }
@@ -167,7 +204,10 @@ public class StateList {
 
         Integer[] stateIntegers = moveMap.get(input);
         for(Integer stateInteger: stateIntegers){
-            stateSet.add(Util.getStateById(stateInteger, dfa.getAllStates()));
+            State state = Util.getStateById(stateInteger, dfa.getAllStates());
+            if(state != null){
+                stateSet.add(Util.getStateById(stateInteger, dfa.getAllStates()));
+            }
         }
 
         StateList list = new StateList(new ArrayList<>(stateSet));//没有加空弧转换的List
@@ -205,11 +245,11 @@ public class StateList {
     }
 
     /**
-     * @param input: 面对的输入
+     * @param
      * @param nfa: 所在的nfa
      * @return StateList
      * @author ZhouXiang
-     * @description 面对某输出，在nfa中的空弧转换
+     * @description 在nfa中的空弧转换
      * @exception
      */
     public StateList moveWithBlank(NFA nfa){
@@ -217,6 +257,7 @@ public class StateList {
         for (State state: states){
             Queue<State> queue = new LinkedList<>(); //用队列来消除递归
             queue.offer(state);
+            stateSet.add(state); //空弧转换要包括自身
 
             while (!queue.isEmpty()){
                 State stackState = queue.poll();
@@ -239,7 +280,7 @@ public class StateList {
      * @return StateList
      * @author ZhouXiang
      * @description 面对某输出，在nfa中，除空弧转换以外的其他弧转换(注意结果中不能有重复的状态，且空弧的转换方式不同，空弧要找到没有新增状态为止)
-     * @exception
+     * @exception 注意，如果a弧转换结果为空会返回null
      */
     public StateList moveWithInput(String input, NFA nfa){
         assert !input.equals("$");
@@ -247,7 +288,10 @@ public class StateList {
 
         Integer[] stateIntegers = moveMap.get(input);
         for(Integer stateInteger: stateIntegers){
-            stateSet.add(Util.getStateById(stateInteger, nfa.getAllStates()));
+            State state = Util.getStateById(stateInteger, nfa.getAllStates());
+            if(state != null){
+                stateSet.add(Util.getStateById(stateInteger, nfa.getAllStates()));
+            }
         }
 
         StateList list = new StateList(new ArrayList<>(stateSet));//没有加空弧转换的List
@@ -255,5 +299,37 @@ public class StateList {
         list.addStateList(list.moveWithBlank(nfa));
 
         return list;
+    }
+
+
+    /**
+     * @param
+     * @param nfa: 所在的nfa
+     * @return StateList
+     * @author ZhouXiang
+     * @description 在nfa中除去自身的空弧转换
+     * @exception
+     */
+    public StateList moveWithBlankWithoutSelf(NFA nfa){
+        Set<State> stateSet = new HashSet<>();
+        for (State state: states){
+            Queue<State> queue = new LinkedList<>(); //用队列来消除递归
+            queue.offer(state);
+//            stateSet.add(state); //空弧转换要包括自身
+
+            while (!queue.isEmpty()){
+                State stackState = queue.poll();
+                StateList nextStates = nfa.move(stackState, "$");
+                List<State> nexts = nextStates.getStates();
+                for(State nextState: nexts){
+                    if(!stateSet.contains(nextState)){
+                        stateSet.add(nextState);
+                        queue.offer(nextState);
+                    }
+                }
+            }
+        }
+
+        return new StateList(new ArrayList<>(stateSet));
     }
 }

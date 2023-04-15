@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/C--Complier.iml" filepath="$PROJECT_DIR$/.idea/C--Complier.iml" />
-      <module fileurl="file://$PROJECT_DIR$/complier/complier.iml" filepath="$PROJECT_DIR$/complier/complier.iml" />
+      <module fileurl="file://$PROJECT_DIR$/complier.iml" filepath="$PROJECT_DIR$/complier.iml" />
     </modules>
   </component>
 </project>

@@ -5,16 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9fb797f0-e2c0-4de1-9dc6-730605a191ce" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/C--Complier/complier/target/classes/lex/entity/DFA.class" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/C--Complier/complier/target/classes/lex/entity/NFA.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/C--Complier/complier/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/C--Complier/complier/.idea/compiler.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/C--Complier/complier/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/C--Complier/complier/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/C--Complier/complier/.idea/jarRepositories.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/C--Complier/complier/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/C--Complier/complier/.idea/uiDesigner.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/C--Complier/complier/.idea/vcs.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/C--Complier/complier/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/C--Complier/complier/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/C--Complier/complier/src/main/java/lex/entity/State.java" beforeDir="false" afterPath="$PROJECT_DIR$/C--Complier/complier/src/main/java/lex/entity/State.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/C--Complier/complier/src/main/java/lex/entity/StateList.java" beforeDir="false" afterPath="$PROJECT_DIR$/C--Complier/complier/src/main/java/lex/entity/StateList.java" afterDir="false" />
@@ -81,7 +75,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "D:/大学/课程/编译原理/My大作业/C--Complier",
+    "last_opened_file_path": "D:/大学/课程/编译原理/My大作业",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -100,8 +94,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1681456583512</updated>
-      <workItem from="1681456586687" duration="464000" />
-      <workItem from="1681457067215" duration="68000" />
+      <workItem from="1681456586687" duration="340000" />
     </task>
     <servers />
   </component>

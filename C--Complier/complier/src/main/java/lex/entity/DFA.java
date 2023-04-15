@@ -40,6 +40,12 @@ public class DFA {
             for(Map.Entry<String, Integer[]> entry: state1.getMoveMap().entrySet()){
                 String key = entry.getKey();
                 Integer[] value = entry.getValue();
+
+                //调试使用
+                if(value.length != 1){
+                    int a = 0;
+                }
+
                 assert value.length == 1;
                 map.put(key, value[0]);
             }

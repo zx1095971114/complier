@@ -92,7 +92,10 @@ public class NFA {
         List<State> resultList = new ArrayList<>();
         for (Integer id: stateInteger){
             State s = Util.getStateById(id, allStates);
-            resultList.add(s);
+
+            if(!(s == null)){
+                resultList.add(s);
+            }
         }
 
         return new StateList(resultList);
@@ -163,7 +166,7 @@ public class NFA {
 
 
     /**
-     * @param nfa:
+     * @param
      * @return List<State>
      * @author ZhouXiang
      * @description 将NFA确定化
@@ -174,7 +177,7 @@ public class NFA {
 
         StateList beginList = new StateList(startStates).moveWithBlank(this);
         dfa1.add(beginList);
-        bfs(beginList, dfa1);
+        dfs(beginList, dfa1);
 
         //将StateList转为State
         List<State> dfa = new ArrayList<>();
@@ -182,23 +185,56 @@ public class NFA {
         for(StateList stateList: dfa1){
             stateList.setStateListId(cnt);
             cnt++;
-            dfa.add(stateList.turn2State());
+        }
+
+        for (StateList stateList: dfa1){
+            dfa.add(stateList.turn2State(dfa1, this));
         }
 
         return DFA.getDFAInstance(dfa);
     }
 
     //广度优先搜索整个nfa
-    private void bfs(StateList stateList, List<StateList> result){
+    private void dfs(StateList stateList, List<StateList> result){
         List<StateList> tempStateList = new ArrayList<>(); //暂存一行中状态转移的StateList
 
         //求该stateList的所有a弧转换
         for(String input: alpha){
-            tempStateList.add(stateList.moveWithInput(input, this));
+            //排除空弧转换的情况
+            if(input.equals("$")){
+                continue;
+            }
+
+            //调试用
+//            if(input.equals("-")){
+//                int a = 0;
+//            }
+
+            //当a弧转换找到的结果是什么都没有时，不要加入
+            StateList temp = stateList.moveWithInput(input, this);
+            if(!temp.getStates().isEmpty()){
+
+                //调试用
+//                if(temp.getStates().get(0).getStateId() == 14){
+//                    int a = 3;
+//                }
+
+                tempStateList.add(temp);
+            }
+
         }
 
-        //判断每一个StateList是否已经在收集的结果里了
+
+        //判断每一个StateList是否已经在收集的![](../../../../../../文档/初始状态转换图.png)结果里了
         for(StateList list: tempStateList){
+
+            //调试使用
+//            if(!list.getStates().isEmpty()){
+//                if(list.getStates().get(0).getStateId() == 14){
+//                    int a = 3;
+//                }
+//            }
+
             boolean isRepeat = false;
             for(StateList stateList1: result){
                 if(stateList1.equals(list)){
@@ -209,7 +245,7 @@ public class NFA {
 
             if(!isRepeat){
                 result.add(list);
-                bfs(list, result);
+                dfs(list, result);
             }
         }
     }
