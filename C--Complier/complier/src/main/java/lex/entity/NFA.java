@@ -206,7 +206,7 @@ public class NFA {
             }
 
             //调试用
-//            if(input.equals("-")){
+//            if(input.equals("$")){
 //                int a = 0;
 //            }
 
@@ -215,7 +215,7 @@ public class NFA {
             if(!temp.getStates().isEmpty()){
 
                 //调试用
-//                if(temp.getStates().get(0).getStateId() == 14){
+//                if(temp.getStates().get(0).getStateId() == 5){
 //                    int a = 3;
 //                }
 
@@ -230,7 +230,7 @@ public class NFA {
 
             //调试使用
 //            if(!list.getStates().isEmpty()){
-//                if(list.getStates().get(0).getStateId() == 14){
+//                if(list.getStates().get(0).getStateId() == 4){
 //                    int a = 3;
 //                }
 //            }

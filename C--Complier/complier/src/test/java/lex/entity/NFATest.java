@@ -76,8 +76,6 @@ public class NFATest {
     }
 
 
-
-
     //此处为简便，只测nfa的转换关系是否正确，只能保证转换关系没出错
     @Test
     public void generateNFA() throws FileNotFoundException {
@@ -92,11 +90,15 @@ public class NFATest {
                 Integer[] test = testMap.get(alpha);
                 Integer[] expected = expectedMap.get(alpha);
 
-                assertArrayEquals(test, expected);
+                if(expected[0].equals(5)){
+                    int a = 0;
+                }
+                assertArrayEquals(expected,test);
             }
         }
     }
 
+    //此处为简便，只测nfa的转换关系是否正确，只能保证转换关系没出错
     @Test
     public void determineNFA() {
         DFA dfa = nfa.determineNFA();

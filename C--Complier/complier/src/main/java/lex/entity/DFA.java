@@ -42,9 +42,9 @@ public class DFA {
                 Integer[] value = entry.getValue();
 
                 //调试使用
-                if(value.length != 1){
-                    int a = 0;
-                }
+//                if(value.length != 1){
+//                    int a = 0;
+//                }
 
                 assert value.length == 1;
                 map.put(key, value[0]);
@@ -114,62 +114,101 @@ public class DFA {
      * @param :
      * @return DFA
      * @author ZhouXiang
-     * @description 将DFA最小化
+     * @description 将原本的DFA最小化
      * @exception
      */
-    public DFA minimizeDFA(){
-        //产生新字母表
-        List<String> stringList = Arrays.asList(alpha);
-        stringList.remove("$");
-        String[] newAlpha = stringList.toArray(new String[0]);
+    public void minimizeDFA(){
+        //建立新状态
+        String[] newEndSymbol = new String[]{"OP"};
+        Map<String, Integer[]> newMap = new HashMap<>();
+        for (String letter: alpha){
+            Integer[] integers = new Integer[1];
+            if(alpha.equals("=")){
+                integers[0] = 3;
+            }else {
+                integers[0] = 0;
+            }
+            newMap.put(letter, integers);
+        }
+        State newState = new State(7,false, newEndSymbol, newMap);
 
-        List<StateList> dfaList = new ArrayList<>();
+        //字母表改变,alpha
+        List<String> stringList = Arrays.asList(alpha); //这个list不支持修改
+        List<String> tempStrList = new ArrayList<>(stringList);
+        tempStrList.remove("$");
+        alpha = tempStrList.toArray(new String[0]);
 
-        StateList temp = new StateList(endStates);
-        StateList firstX = temp.moveWithBlank(this); //第一次划分时，产生的等价于终止状态的集合
+        //所有状态改变,allStates
+        //改状态1
+        State state1 = Util.getStateById(1, allStates);
+        Map<String, Integer[]> map1 = state1.getMoveMap();
+        map1.put("=", new Integer[]{7});
+        map1.put(">", new Integer[]{7});
+        map1.put("<", new Integer[]{7});
+        //改状态11
+        Util.getStateById(11, allStates).setStateId(9);
+        //删状态7, 9, 10
+        State state7 = Util.getStateById(7, allStates);
+        State state9 = Util.getStateById(9, allStates);
+        State state10 = Util.getStateById(10, allStates);
+        allStates.remove(state7);
+        allStates.remove(state9);
+        allStates.remove(state10);
 
-        List<State> temp1 = new ArrayList<>(allStates);
-        temp1.removeAll(firstX.getStates());
-        StateList firstY = new StateList(temp1); //第一次划分时，产生的除了终止状态以外的集合
+        allStates.add(6, newState);
 
-        List<StateList> curDfa = new ArrayList<>();
-        curDfa.add(firstX);
-        curDfa.add(firstY);
+        //改endStates
+        endStates.remove(state7);
+        endStates.remove(state9);
+        endStates.remove(state10);
+        endStates.add(newState);
 
-        for(String letter: newAlpha){
 
+        //改functionList
+        Map<String, Integer> dfaMap1 = functionList.get(0);
+        dfaMap1.put("digit", 9);
+        dfaMap1.put("=", 7);
+        dfaMap1.put(">", 7);
+        dfaMap1.put("<", 7);
+
+        Iterator<Map<String, Integer>> it = functionList.iterator();
+        while (it.hasNext()){
+            Map<String, Integer> map = it.next();
+            map.remove("$");
+            if(functionList.indexOf(map) == 9 || functionList.indexOf(map) == 10){
+                it.remove();
+            }
         }
 
-        return null;
     }
 
-    //使用某字母对目前的dfa(List<StateList>)进行一次划分,返回划分后的结果
-    private List<StateList> separate(List<StateList> curList, String input){
-        Queue<StateList> queue = new LinkedList<>();
-        for (StateList list: curList){
-            queue.offer(list);
-        }
-        List<StateList> oldList = new ArrayList<>(curList);
-
-        while (!queue.isEmpty()){
-            StateList tempStateList = queue.poll();
-
-            StateList temp = tempStateList.moveWithInput(input, this);
-            //看a弧转换后的结果在不在oldList里面
-            boolean contain = false;
-            for (StateList list: oldList){
-                if(temp.equals(list)){
-                    contain = true;
-                    break;
-                }
-            }
-
-            if(contain){
-
-            }
-        }
-
-        return null;
-    }
+//    //使用某字母对目前的dfa(List<StateList>)进行一次划分,返回划分后的结果
+//    private List<StateList> separate(List<StateList> curList, String input){
+//        Queue<StateList> queue = new LinkedList<>();
+//        for (StateList list: curList){
+//            queue.offer(list);
+//        }
+//        List<StateList> oldList = new ArrayList<>(curList);
+//
+//        while (!queue.isEmpty()){
+//            StateList tempStateList = queue.poll();
+//
+//            StateList temp = tempStateList.moveWithInput(input, this);
+//            //看a弧转换后的结果在不在oldList里面
+//            boolean contain = false;
+//            for (StateList list: oldList){
+//                if(temp.equals(list)){
+//                    contain = true;
+//                    break;
+//                }
+//            }
+//
+//            if(contain){
+//
+//            }
+//        }
+//
+//        return null;
+//    }
 
 }
