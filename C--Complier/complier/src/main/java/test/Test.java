@@ -24,8 +24,8 @@ import java.util.List;
  */
 public class Test {
     public static void main(String[] args) throws IOException {
-        String inputFile = "./src/test/java/myTest/testA/test1.sql";
-        String outputFileLex = "./src/test/java/myTest/testA/lexTest01.tsv";
+        String inputFile = "D:\\大学\\课程\\编译原理\\My大作业\\C--Complier\\生成结果\\Test1\\00.txt";
+        String outputFileLex = "D:\\大学\\课程\\编译原理\\My大作业\\C--Complier\\生成结果\\Test1\\00_lexical.txt";
 
 //        String outputFileYacc = "./src/main/myTest/testB/yaccTest2.tsv";
 //        String outputFileFirstAndFollow = "./src/main/myTest/testA/grammarTest1.tsv";

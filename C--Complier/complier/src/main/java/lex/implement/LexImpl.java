@@ -1,18 +1,19 @@
 package lex.implement;
 
+import lex.entity.DFA;
+import lex.entity.NFA;
 import lex.entity.State;
 import lex.entity.Token;
 import lex.itf.Lex;
+import log.Log;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
+
 
 import static lex.entity.State.*;
 
@@ -26,350 +27,129 @@ import static lex.entity.State.*;
  */
 public class LexImpl implements Lex {
 
+    private static final Logger logger = LoggerFactory.getLogger(LexImpl.class);
     /**
      * @param input: 输入的字符串
      * @return List<Token> 识别出的符号表
      * @author ZhouXiang
      * @description 将输入的字符串经过词法分析转为对应的token序列。输出符号表
      */
-    public List<Token> lexAnalysis(String input){
-        List<Token> result = new ArrayList<>();
-//        State currentState = ;
-        int firstLetter = 0;
-        int endLetter = 0;
-        int currentLetter = 0;
-        //保证最后一个元素可以被读取到,
-        //要加两个空格，INSERT识别的时候currentLetter会到7
-        //最后空格会在S状态打转，直到currentLetter限制其退出
-        input = input + "  ";
+    public List<Token> lexAnalysis(String input) throws FileNotFoundException {
+        List<Token> tokens = new ArrayList<>();
+        //加空格是为了保证能读取最后的token
+        //当最后的字符的currentState为起始状态时，证明最后是由空格和\n组成的符号串，不该加入tokens，加入" "无影响
+        //当最后的字符的currentState为非终结状态时，证明到最后了还没读到可判断断词的字符，说明出现错误，加入" "无影响
+        //当最后的字符的currentState为终结状态时，因为所有终结状态遇到" "都会断词，且不会将最后一个" "读进，加入" "能帮助断词，否则该词就无法读进了
+        input = input + " ";
 
-        //走状态转换图
-//        while (currentLetter < input.length()){
-//            if(currentState.isEnd()){
-//                //特定状态游标前移
-//                if(currentState == E || currentState == FLOAT || currentState == INT || currentState == OP2 || currentState == OP3 || currentState == OP5 || currentState == OP14){
-//                    endLetter = currentLetter - 1;
-//                } else{
-//                    endLetter = currentLetter;
-//                }
-//
-//                //识别出相应的Token
-//                Token token = new Token();
-//                token.setContent(input.substring(firstLetter,endLetter));
-//                String compareContent = token.getContent().toUpperCase();
-//                switch (currentState){
-//                    case E://未处理order by和group by
-//                        switch (compareContent){
-//                            case "SELECT":
-//                                token.setType("KW");
-//                                token.setSymbol("1");
-//                                break;
-//                            case "FROM":
-//                                token.setType("KW");
-//                                token.setSymbol("2");
-//                                break;
-//                            case "WHERE":
-//                                token.setType("KW");
-//                                token.setSymbol("3");
-//                                break;
-//                            case "AS":
-//                                token.setType("KW");
-//                                token.setSymbol("4");
-//                                break;
-//                            case "INSERT":
-//                                token.setType("KW");
-//                                token.setSymbol("6");
-//                                break;
-//                            case "INTO":
-//                                token.setType("KW");
-//                                token.setSymbol("7");
-//                                break;
-//                            case "VALUES":
-//                                token.setType("KW");
-//                                token.setSymbol("8");
-//                                break;
-//                            case "VALUE":
-//                                token.setType("KW");
-//                                token.setSymbol("9");
-//                                break;
-//                            case "DEFAULT":
-//                                token.setType("KW");
-//                                token.setSymbol("10");
-//                                break;
-//                            case "UPDATE":
-//                                token.setType("KW");
-//                                token.setSymbol("11");
-//                                break;
-//                            case "SET":
-//                                token.setType("KW");
-//                                token.setSymbol("12");
-//                                break;
-//                            case "DELETE":
-//                                token.setType("KW");
-//                                token.setSymbol("13");
-//                                break;
-//                            case "JOIN":
-//                                token.setType("KW");
-//                                token.setSymbol("14");
-//                                break;
-//                            case "LEFT":
-//                                token.setType("KW");
-//                                token.setSymbol("15");
-//                                break;
-//                            case "RIGHT":
-//                                token.setType("KW");
-//                                token.setSymbol("16");
-//                                break;
-//                            case "ON":
-//                                token.setType("KW");
-//                                token.setSymbol("17");
-//                                break;
-//                            case "MIN":
-//                                token.setType("KW");
-//                                token.setSymbol("18");
-//                                break;
-//                            case "MAX":
-//                                token.setType("KW");
-//                                token.setSymbol("19");
-//                                break;
-//                            case "AVG":
-//                                token.setType("KW");
-//                                token.setSymbol("20");
-//                                break;
-//                            case "SUM":
-//                                token.setType("KW");
-//                                token.setSymbol("21");
-//                                break;
-//                            case "UNION":
-//                                token.setType("KW");
-//                                token.setSymbol("22");
-//                                break;
-//                            case "ALL":
-//                                token.setType("KW");
-//                                token.setSymbol("23");
-//                                break;
-//                            case "GROUP":
-//                                token.setType("KW");
-//                                token.setSymbol("24");
-//                                break;
-//                            case "HAVING":
-//                                token.setType("KW");
-//                                token.setSymbol("25");
-//                                break;
-//                            case "DISTINCT":
-//                                token.setType("KW");
-//                                token.setSymbol("26");
-//                                break;
-//                            case "ORDER":
-//                                token.setType("KW");
-//                                token.setSymbol("27");
-//                                break;
-//                            case "TRUE":
-//                                token.setType("KW");
-//                                token.setSymbol("28");
-//                                break;
-//                            case "FALSE":
-//                                token.setType("KW");
-//                                token.setSymbol("29");
-//                                break;
-//                            case "UNKNOWN":
-//                                token.setType("KW");
-//                                token.setSymbol("30");
-//                                break;
-//                            case "IS":
-//                                token.setType("KW");
-//                                token.setSymbol("31");
-//                                break;
-//                            case "NULL":
-//                                token.setType("KW");
-//                                token.setSymbol("32");
-//                                break;
-//                            case "AND":
-//                                token.setType("OP");
-//                                token.setSymbol("8");
-//                                break;
-//                            case "OR":
-//                                token.setType("OP");
-//                                token.setSymbol("10");
-//                                break;
-//                            case "XOR":
-//                                token.setType("OP");
-//                                token.setSymbol("12");
-//                                break;
-//                            case "NOT":
-//                                token.setType("OP");
-//                                token.setSymbol("13");
-//                                break;
-//                           default:
-//                               token.setType("IDN");
-//                               token.setSymbol(token.getContent());
-//                        }
-//                        result.add(token);
-//                        break;
-//
-//                    case FLOAT:
-//                        token.setType("FLOAT");
-//                        token.setSymbol(token.getContent());
-//                        result.add(token);
-//                        break;
-//
-//                    case INT:
-//                        token.setType("INT");
-//                        token.setSymbol(token.getContent());
-//                        result.add(token);
-//                        break;
-//
-//                    case STR:
-//                        token.setType("STR");
-////                        System.out.println(token.getContent());
-////                        System.exit(2);
-//                        token.setSymbol(token.getContent().substring(1,token.getContent().length() -1));
-//                        result.add(token);
-//                        break;
-//
-//                    case OP1:
-//                        token.setType("OP");
-//                        token.setSymbol("1");
-//                        result.add(token);
-//                        break;
-//
-//                    case OP2:
-//                        token.setType("OP");
-//                        token.setSymbol("2");
-//                        result.add(token);
-//                        break;
-//
-//                    case OP3:
-//                        token.setType("OP");
-//                        token.setSymbol("3");
-//                        result.add(token);
-//                        break;
-//
-//                    case OP4:
-//                        token.setType("OP");
-//                        token.setSymbol("4");
-//                        result.add(token);
-//                        break;
-//
-//                    case OP5:
-//                        token.setType("OP");
-//                        token.setSymbol("5");
-//                        result.add(token);
-//                        break;
-//
-//                    case OP6:
-//                        token.setType("OP");
-//                        token.setSymbol("6");
-//                        result.add(token);
-//                        break;
-//
-//                    case OP7:
-//                        token.setType("OP");
-//                        token.setSymbol("7");
-//                        result.add(token);
-//                        break;
-//
-//                    case OP14:
-//                        token.setType("OP");
-//                        token.setSymbol("14");
-//                        result.add(token);
-//                        break;
-//
-//                    case OP16:
-//                        token.setType("OP");
-//                        token.setSymbol("16");
-//                        result.add(token);
-//                        break;
-//
-//                    case OP11:
-//                        token.setType("OP");
-//                        token.setSymbol("11");
-//                        result.add(token);
-//                        break;
-//
-//                    case SE1:
-//                        token.setType("SE");
-//                        token.setSymbol("1");
-//                        result.add(token);
-//                        break;
-//
-//                    case SE2:
-//                        token.setType("SE");
-//                        token.setSymbol("2");
-//                        result.add(token);
-//                        break;
-//
-//                    case SE3:
-//                        token.setType("SE");
-//                        token.setSymbol("3");
-//                        result.add(token);
-//                        break;
-//
-//                    case ERROR:
-//                        System.out.println("进入ERROR状态");
-//                        System.out.println("当前识别内容" + token.getContent());
-//                        System.out.println("当前识别的字母是" + currentLetter);
-//                        System.out.println("当前识别状态为" + currentState);
-//                        System.exit(0);
-//
-//                    default:
-//                        System.out.println("在未定义状态终止");
-//                        System.exit(1);
-//
-//                }
-//
-//                //下一个元素游标的初始化
-//                firstLetter = endLetter;
-//                currentLetter = firstLetter;
-//                currentState = S;
-//            } else {
-//                //S状态空格,\n空转要去掉
-//                if(currentState == S){
-//                    if(input.charAt(currentLetter) == ' ' || input.charAt(currentLetter) == '\n'){
-//                        firstLetter++;
-//                    }
-//                }
-//
-//                currentState = currentState.getNextState(input.charAt(currentLetter));
-//                currentLetter++;
-////                if(currentLetter == input.length() - 2){
-////                    System.out.println(6);
-////                }
-//            }
-//        }
+        //获取dfa
+        String fileName = "D:\\大学\\课程\\编译原理\\My大作业\\C--Complier\\complier\\src\\main\\resources\\initialStateTable.csv";
+        NFA nfa = NFA.generateNFA(fileName);
+        DFA dfa = nfa.determineNFA();
+        dfa.minimizeDFA();
 
-        //修改order by和group by
-        int size = result.size();
-        for(int i = 0; i < size; i++){
-//            if(i == 40){
-//                System.out.println("1");
-//            }
-            Token token = result.get(i);
-            if(token.getType().equals("KW")){
-                switch (token.getSymbol()){
-                    case "24":
-                    case "27":
-                         if(i < size - 1) {
-                            Token nextToken = result.get(i + 1);
-                            String content = nextToken.getContent();
-                            if(nextToken.getType().equals("IDN") && content.toUpperCase().equals("BY")){
-                                token.setContent(token.getContent() + " " + nextToken.getContent());
-                                result.remove(i + 1);
-                                size--;
-                            }
-                        } else {
-                             token.setType("IDN");
-                             token.setSymbol(token.getContent());
-                         }
-                        break;
+        State currentState = dfa.getStartState(); //字符当前所处的状态
+        int currentNum = 0; //当前识别到哪一个字符
+        int startNum = 0; //每个token内容的开始字符
+        int endNum = 0; //每个token内容的结束字符
+
+        while (currentNum < input.length()){
+            //字符预处理
+            char currentChar = input.charAt(currentNum);
+            String currentLetter = "";
+            if(Character.isDigit(currentChar)){
+                currentLetter = "digit";
+            }else if(Character.isLetter(currentChar)){
+                currentLetter = "letter";
+            }else if(currentChar == ','){
+                currentLetter = "dot";
+            }else {
+                currentLetter = String.valueOf(currentChar);
+            }
+            if(!Arrays.asList(dfa.getAlpha()).contains(currentLetter)){
+                currentLetter = "others";
+            }
+
+            //找开始位置,会将空格，\n都去除
+            if(currentState.isStart()){
+                startNum = currentNum;
+            }
+
+            if(currentChar == '}'){
+                int a = 1;
+            }
+
+            //找结束位置
+            State nextState = dfa.move(currentState, currentLetter);
+            if(nextState == null){
+                if(currentState.isEnd()){
+                    endNum = currentNum;
+                    String content = input.substring(startNum, endNum);
+                    String type = "";
+                    if(currentState.getEndSymbol().length == 1){
+                        type = currentState.getEndSymbol()[0];
+                    }else {
+                        if(content.equals("int") || content.equals("void") || content.equals("return") || content.equals("const")){
+                            type = "KW";
+                        }else {
+                            type = "IDN";
+                        }
+                    }
+
+                    Token token = new Token(type, content);
+                    tokens.add(token);
+
+                    currentState = dfa.getStartState();
+                }else {
+                    String errorInfo = currentLetter + "不能被识别，它是输入的第" + currentNum + "个字符";
+                    Log.errorLog(errorInfo, logger);
+                    System.exit(1);
+                }
+            }else {
+                currentState = nextState;
+                //后移currentNum
+                currentNum++;
+            }
+        }
+
+        //处理负数
+        //找到应该合并的位置
+        List<Integer> list = new ArrayList<>();
+        for(int i = 0; i < tokens.size(); i++){
+            Token before = null;
+            if(i != 0){
+                before = tokens.get(i - 1);
+            }
+            Token cur = tokens.get(i);
+            Token after = null;
+            if(i != tokens.size() - 1){
+                after = tokens.get(i + 1);
+            }
+
+            if(cur.getContent().equals("-") && after != null && after.getType().equals("INT")){
+                if(before == null || before.getType().equals("KW") || before.getType().equals("OP")){
+                    list.add(new Integer(i));
+                }else {
+                    if(before.getContent().equals("(") || before.getContent().equals("{")){
+                        list.add(new Integer(i));
+                    }
                 }
             }
         }
 
-
-        for(Token token : result){
-            token.calculateDealing();
+        List<Token> result = new ArrayList<>();
+        int skip = 0;
+        for(int i = 0; i < tokens.size() - list.size(); i++){
+            if(list.contains(i + skip)){
+                String content = tokens.get(i + skip).getContent() + tokens.get(i + skip + 1).getContent();
+                Token token = new Token("INT", content);
+                result.add(token);
+                skip++;
+            }else {
+                result.add(tokens.get(i + skip));
+            }
         }
+
         return result;
     }
 
@@ -395,7 +175,7 @@ public class LexImpl implements Lex {
         List<Token> tokens = lexAnalysis(input);
         String output = "";
         for(Token token : tokens){
-            output = output.concat(token.getContent() + "   " + "<" + token.getType() + "," + token.getSymbol() + ">\n");
+            output = output.concat(token.getContent() + "\t" + "<" + token.getType() + ">\n");
         }
 
         //将输出字符串输出到输出文件中
@@ -403,7 +183,7 @@ public class LexImpl implements Lex {
         if(!file.exists()){
             file.createNewFile();
         }
-        FileWriter fw = new FileWriter(file,true);
+        FileWriter fw = new FileWriter(file,false);
         BufferedWriter bw = new BufferedWriter(fw);
         bw.write(output);
         bw.close();

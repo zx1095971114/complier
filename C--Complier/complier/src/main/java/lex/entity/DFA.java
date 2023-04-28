@@ -101,7 +101,7 @@ public class DFA {
      * @param origin 初始状态
      * @return State
      * @author ZhouXiang
-     * @description 在状态origin，遇到输入input，该转移到的唯一状态
+     * @description 在状态origin，遇到输入input，该转移到的唯一状态，若输入input没有对应的转移状态，则返回null
      * @exception
      */
     public State move(State origin, String input){

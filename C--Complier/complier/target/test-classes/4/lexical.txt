@@ -1,0 +1,9 @@
+int	<KW>
+a	<IDN>
+=	<OP>
+-	<OP>
+3	<INT>
+-	<OP>
+-	<OP>
+6	<INT>
+;	<SE>

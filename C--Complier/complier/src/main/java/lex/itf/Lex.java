@@ -2,6 +2,7 @@ package lex.itf;
 
 import lex.entity.Token;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public interface Lex {
      * @author ZhouXiang
      * @description 将输入的字符串经过词法分析转为对应的token序列。输出符号表
      */
-    public List<Token> lexAnalysis(String input);
+    public List<Token> lexAnalysis(String input) throws FileNotFoundException;
 
     /**
      * @param inputFile: 输入文件名

@@ -36,7 +36,7 @@ public class YaccImpl implements Yacc {
         stack.push("#");
         stack.push(grammar.getStartSymbol());
         List<Analysis> analysises = new ArrayList<>();
-        Token endToken = new Token("#","#","#");
+        Token endToken = new Token("#","#");
         tokens.add(endToken);
 
         int i = 0;
@@ -48,7 +48,7 @@ public class YaccImpl implements Yacc {
 
             analysis.setNo(analysisNo.toString());
             analysis.setStackSym(stack.peek());
-            analysis.setFaceSym(token.getDealing());
+            analysis.setFaceSym(token.getType());
 
             String now = analysis.getStackSym();
             String face = analysis.getFaceSym();

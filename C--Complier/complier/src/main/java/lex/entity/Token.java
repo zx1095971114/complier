@@ -9,35 +9,14 @@ package lex.entity;
  * @version: 1.0
  */
 public class Token {
-    private String type;
-    private String content;
-    private String symbol;
+    private String type; //符号种别
+    private String content; //符号对应的字符串内容
 
-    private String dealing;
-
-    public Token(String type, String content,String symbol) {
+    public Token(String type, String content) {
         this.type = type;
         this.content = content;
-        this.symbol = symbol;
-
-        calculateDealing();
     }
 
-    public void calculateDealing(){
-        if(this.type.equals("KW") || this.type.equals("SE") || this.type.equals("OP")){
-            this.dealing = this.content.toUpperCase();
-            if(this.dealing.equals("GROUP BY")){
-                this.dealing = "GROUP_BY";
-            }
-            if(this.dealing.equals("ORDER BY")){
-                this.dealing = "ORDER_BY";
-            }
-        } else if (this.type.equals("STR")) {
-            this.dealing = "STRING";
-        } else {
-            this.dealing = this.type;
-        }
-    }
 
     public Token() {
     }
@@ -50,10 +29,6 @@ public class Token {
         return content;
     }
 
-    public String getDealing() {
-        return dealing;
-    }
-
     public void setType(String type) {
         this.type = type;
     }
@@ -62,11 +37,4 @@ public class Token {
         this.content = content;
     }
 
-    public void setSymbol(String symbol) {
-        this.symbol = symbol;
-    }
-
-    public String getSymbol() {
-        return symbol;
-    }
 }

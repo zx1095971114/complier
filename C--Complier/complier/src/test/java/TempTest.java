@@ -1,5 +1,8 @@
 import lex.entity.DFA;
 import lex.entity.NFA;
+import log.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -15,15 +18,14 @@ import java.util.*;
  * @version: 1.0
  */
 public class TempTest {
+    private static final Logger logger = LoggerFactory.getLogger(TempTest.class);
     public static void main(String[] args) throws FileNotFoundException {
 
-        String fileNameSrc = "D:\\大学\\课程\\编译原理\\My大作业\\C--Complier\\complier\\src\\main\\resources\\initialStateTable.csv";
-        String fileNameTest = "";
-        NFA nfa = NFA.generateNFA(fileNameSrc);
 
-        DFA dfa = nfa.determineNFA();
-        int b = 0;
+        method1();
+    }
 
-
+    public static void method1(){
+        Log.errorLog("test3", logger);
     }
 }
