@@ -27,7 +27,7 @@ public class DFATest {
 
         List<Map<String, Integer>> testList = new ArrayList<>();
         Scanner scanner = new Scanner(new FileReader(fileNameTest));
-        String[] attribute = scanner.nextLine().split(",");
+        String[] attribute = scanner.nextLine().replaceAll("\uFEFF", "").split(",");
         while (scanner.hasNextLine()) {
             String[] line = scanner.nextLine().split(",");
             Map<String, Integer> map = new HashMap<>();
@@ -62,6 +62,8 @@ public class DFATest {
         for(int i = 0; i < function.size(); i++){
             Map<String, Integer> testMap = function.get(i);
             Map<String, Integer> expectedMap = expectedFunction.get(i);
+
+//            Integer b = expectedMap.get("letter");
 
             Set<String> alphas = testMap.keySet();
             for(String alpha: alphas){

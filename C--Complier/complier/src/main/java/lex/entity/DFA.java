@@ -138,15 +138,6 @@ public class DFA {
         tempStrList.remove("$");
         alpha = tempStrList.toArray(new String[0]);
 
-        //所有状态改变,allStates
-        //改状态1
-        State state1 = Util.getStateById(1, allStates);
-        Map<String, Integer[]> map1 = state1.getMoveMap();
-        map1.put("=", new Integer[]{7});
-        map1.put(">", new Integer[]{7});
-        map1.put("<", new Integer[]{7});
-        //改状态11
-        Util.getStateById(11, allStates).setStateId(9);
         //删状态7, 9, 10
         State state7 = Util.getStateById(7, allStates);
         State state9 = Util.getStateById(9, allStates);
@@ -156,6 +147,17 @@ public class DFA {
         allStates.remove(state10);
 
         allStates.add(6, newState);
+
+        //所有状态改变,allStates
+        //改状态1
+        State state1 = Util.getStateById(1, allStates);
+        Map<String, Integer[]> map1 = state1.getMoveMap();
+        map1.put("=", new Integer[]{7});
+        map1.put(">", new Integer[]{7});
+        map1.put("<", new Integer[]{7});
+        //改状态11
+        Util.getStateById(11, allStates).setStateId(9);
+
 
         //改endStates
         endStates.remove(state7);
@@ -171,13 +173,16 @@ public class DFA {
         dfaMap1.put(">", 7);
         dfaMap1.put("<", 7);
 
+        Map<String, Integer> dfaMap2 = functionList.get(10);
+        dfaMap2.put("digit", 9);
+
+        functionList.remove(8);
+        functionList.remove(8); //删除一个以后，序号会改变
+
         Iterator<Map<String, Integer>> it = functionList.iterator();
         while (it.hasNext()){
             Map<String, Integer> map = it.next();
             map.remove("$");
-            if(functionList.indexOf(map) == 9 || functionList.indexOf(map) == 10){
-                it.remove();
-            }
         }
 
     }

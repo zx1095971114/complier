@@ -18,19 +18,15 @@ public class Util {
      * @param states:
      * @return State
      * @author ZhouXiang
-     * @description 根据状态id在状态列表(一个dfa或nfa)中找到对应的状态
+     * @description 根据状态id在状态列表(一个dfa或nfa)中找到对应的状态,只匹配第一个对应的序号
      * @exception
      */
     public static State getStateById(int id, List<State> states){
-        if(id <= 0 || id > states.size()){
-            return null;
-        }
         for(State state: states){
             if(state.getStateId() == id){
                 return state;
             }
         }
-
         return null;
     }
 
