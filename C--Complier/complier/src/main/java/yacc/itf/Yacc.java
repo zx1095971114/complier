@@ -23,14 +23,14 @@ public interface Yacc {
      * @author ZhouXiang
      * @description 根据词法分析的结果，产生语法分析的结果，输入到文件中
      */
-    public boolean printYacc(List<Token> tokens, String filePath,Grammar grammar) throws IOException;
+    public boolean printYacc(List<Token> tokens, String filePath) throws IOException;
 
     /**
      * @param grammar: 要产生first集合的语法
      * @param filePath: 打印文件路径
      * @return boolean 是否成功
      * @author ZhouXiang
-     * @description 产生某一语法对应的First集合
+     * @description 产生某一语法对应的First集合, 暂时弃用
      */
     public boolean printFirstAndFollow(Grammar grammar,String filePath) throws IOException;
 }

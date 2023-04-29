@@ -75,9 +75,9 @@ public class LexImpl implements Lex {
                 startNum = currentNum;
             }
 
-            if(currentChar == '}'){
-                int a = 1;
-            }
+//            if(currentChar == '}'){
+//                int a = 1;
+//            }
 
             //找结束位置
             State nextState = dfa.move(currentState, currentLetter);
@@ -143,10 +143,15 @@ public class LexImpl implements Lex {
             if(list.contains(i + skip)){
                 String content = tokens.get(i + skip).getContent() + tokens.get(i + skip + 1).getContent();
                 Token token = new Token("INT", content);
+                //加入结果前要计算其在语法分析中的dealing
+                token.calculateDealing();
                 result.add(token);
                 skip++;
             }else {
-                result.add(tokens.get(i + skip));
+                Token token = tokens.get(i + skip);
+                //加入结果前要计算其在语法分析中的dealing
+                token.calculateDealing();
+                result.add(token);
             }
         }
 

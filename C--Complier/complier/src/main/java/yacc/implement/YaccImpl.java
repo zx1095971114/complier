@@ -1,6 +1,9 @@
 package yacc.implement;
 
 import lex.entity.Token;
+import log.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import yacc.entity.Analysis;
 import yacc.entity.Grammar;
 import yacc.entity.Rool;
@@ -22,6 +25,7 @@ import java.util.*;
  * @version: 1.0
  */
 public class YaccImpl implements Yacc {
+    private static final Logger logger = LoggerFactory.getLogger(YaccImpl.class);
     /**
      * @param tokens: 词法分析产生的序列
      * @param filePath: 语法分析产生文件的路径
@@ -29,7 +33,10 @@ public class YaccImpl implements Yacc {
      * @author ZhouXiang
      * @description 根据词法分析的结果，产生语法分析的结果，输入到文件中
      */
-    public boolean printYacc(List<Token> tokens, String filePath,Grammar grammar) throws IOException {
+    public boolean printYacc(List<Token> tokens, String filePath) throws IOException {
+        String grammarFile = "D:\\大学\\课程\\编译原理\\My大作业\\C--Complier\\complier\\src\\main\\resources\\grammar.txt";
+        Grammar grammar = Grammar.getGrammarByFile(grammarFile, "program");
+
         Stack<String> stack = new Stack<>();
         Map<String,Map<String, Rool>> table = grammar.getPredictMap();
 
@@ -37,6 +44,7 @@ public class YaccImpl implements Yacc {
         stack.push(grammar.getStartSymbol());
         List<Analysis> analysises = new ArrayList<>();
         Token endToken = new Token("#","#");
+        endToken.calculateDealing();
         tokens.add(endToken);
 
         int i = 0;
@@ -48,11 +56,14 @@ public class YaccImpl implements Yacc {
 
             analysis.setNo(analysisNo.toString());
             analysis.setStackSym(stack.peek());
-            analysis.setFaceSym(token.getType());
+            analysis.setFaceSym(token.getDealing());
 
             String now = analysis.getStackSym();
             String face = analysis.getFaceSym();
 
+            if(now.equals("compUnit") && !face.equals("void")){
+                int a = 3;
+            }
 
             if(now.equals(face)){
                 if(now.equals("#")){
@@ -76,10 +87,12 @@ public class YaccImpl implements Yacc {
                     analysis.setRoolNo("/");
                     analysises.add(analysis);
 
-                    System.exit(401);
-
-                    stack.pop();
-                    i++;
+                    String info = "语法分析遇到错误, 非终结符: " + now + ", 面临的终结符: " + face;
+                    Log.errorLog(info, logger);
+                    break;
+//                    System.exit(401);
+//                    stack.pop();
+//                    i++;
                 } else {
                     analysis.setAction("reduction");
                     analysis.setRoolNo(rool.getNo());
@@ -104,33 +117,21 @@ public class YaccImpl implements Yacc {
         if(!file.exists()){
             file.createNewFile();
         }
-        FileWriter fw = new FileWriter(file,true);
+        FileWriter fw = new FileWriter(file,false);
         BufferedWriter bw = new BufferedWriter(fw);
 
         for(Analysis analysis : analysises){
+            //将"#"转为EOF
             if(analysis.getFaceSym().equals("#")){
-                analysis.setFaceSym("");
+                analysis.setFaceSym("EOF");
             }
             if(analysis.getStackSym().equals("#")){
-                analysis.setStackSym("");
-            }
-
-            if(analysis.getFaceSym().equals("ORDER_BY")){
-                analysis.setFaceSym("ORDER BY");
-            }
-            if(analysis.getStackSym().equals("ORDER_BY")){
-                analysis.setStackSym("ORDER BY");
-            }
-
-            if(analysis.getFaceSym().equals("GROUP_BY")){
-                analysis.setFaceSym("GROUP BY");
-            }
-            if(analysis.getStackSym().equals("GROUP_BY")){
-                analysis.setStackSym("GROUP BY");
+                analysis.setStackSym("EOF");
             }
 
             String content = "";
-            content = content + analysis.getNo() + "    " + analysis.getRoolNo() + "    " + analysis.getStackSym() + "#" + analysis.getFaceSym() + "    " + analysis.getAction() + "\n";
+//            content = content + analysis.getNo() + "    " + analysis.getRoolNo() + "    " + analysis.getStackSym() + "#" + analysis.getFaceSym() + "    " + analysis.getAction() + "\n";
+            content = content + analysis.getStackSym() + "#" + analysis.getFaceSym() + "\t" + analysis.getAction() + "\n";
             bw.write(content);
         }
 
@@ -146,8 +147,8 @@ public class YaccImpl implements Yacc {
 
         Rool result = table.get(non).get(end);
         if(result == null){
-            System.out.println("nonNull: " + non);
-            System.out.println("endNull: " + end);
+            String info = "在预测分析表中找不到对应的非终结符和终结符，非终结符: " + non + "， 终结符: " + end;
+            Log.errorLog(info, logger);
             System.exit(886);
         }
         return table.get(non).get(end);
@@ -159,7 +160,7 @@ public class YaccImpl implements Yacc {
      * @param filePath: 打印文件路径
      * @return boolean 是否成功
      * @author ZhouXiang
-     * @description 产生某一语法对应的First集合
+     * @description 产生某一语法对应的First集合, 暂时弃用
      */
     public boolean printFirstAndFollow(Grammar grammar, String filePath) throws IOException {
         Map<String,List<String>> first = grammar.getFirst();

@@ -27,12 +27,10 @@ public class Test {
         String inputFile = "D:\\大学\\课程\\编译原理\\My大作业\\C--Complier\\生成结果\\Test1\\00.txt";
         String outputFileLex = "D:\\大学\\课程\\编译原理\\My大作业\\C--Complier\\生成结果\\Test1\\00_lexical.txt";
 
-//        String outputFileYacc = "./src/main/myTest/testB/yaccTest2.tsv";
+        String outputFileYacc = "D:\\大学\\课程\\编译原理\\My大作业\\C--Complier\\生成结果\\Test1\\00_grammar.txt";
 //        String outputFileFirstAndFollow = "./src/main/myTest/testA/grammarTest1.tsv";
-//        String grammarFile = "./src/main/resources/grammar.txt";
-//        Grammar grammar = Grammar.getGrammarByFile(grammarFile,"root");
-//        Yacc yacc = new YaccImpl();
 
+        Yacc yacc = new YaccImpl();
         Lex lex = new LexImpl();
 
         if(lex.lexAnalysisToFile(inputFile,outputFileLex)){
@@ -43,12 +41,12 @@ public class Test {
 //        }
 
 
-//        String input = readFile(inputFile);
-//        List<Token> tokens = lex.lexAnalysis(input);
+        String input = readFile(inputFile);
+        List<Token> tokens = lex.lexAnalysis(input);
 
-//        if(yacc.printYacc(tokens,outputFileYacc,grammar)){
-//            System.out.println("ok3");
-//        }
+        if(yacc.printYacc(tokens,outputFileYacc)){
+            System.out.println("ok3");
+        }
 
 
     }

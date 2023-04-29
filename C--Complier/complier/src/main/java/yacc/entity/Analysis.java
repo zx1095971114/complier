@@ -10,11 +10,11 @@ package yacc.entity;
  * @version: 1.0
  */
 public class Analysis {
-    private String no;
-    private String roolNo;
-    private String stackSym;
-    private String faceSym;
-    private String action;
+    private String no; //操作序号
+    private String roolNo; //使用的规则序号
+    private String stackSym; //栈顶符号
+    private String faceSym; //面对的输入符号
+    private String action; //进行的动作
 
     public Analysis(String no, String roolNo, String stackSym, String faceSym, String action) {
         this.no = no;

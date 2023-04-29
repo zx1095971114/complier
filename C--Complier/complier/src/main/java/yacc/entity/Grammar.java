@@ -17,18 +17,18 @@ import java.util.stream.Collectors;
  * @version: 1.0
  */
 public class Grammar {
-    private List<String> nonEndSymbol;
-    private List<String> endSymbol;
-    private String startSymbol;
-    private List<Rool> rools;
+    private List<String> nonEndSymbol; //非终结符集合
+    private List<String> endSymbol; //终结符集合，此处将$也算在了终结符中
+    private String startSymbol; //开始符号
+    private List<Rool> rools; //一条一条单个的规则
 
-    private Map<String,Set<String>> newRools;
+    private Map<String,Set<String>> newRools; //一个非终结符对应的一组规则
     //单个符号的first集合
     private Map<String, List<String>> first;
     //非终结符的follow集合
     private Map<String, Set<String>> nonFollow;
 
-    // 存储在查找FOLLOW集合时非终结符的状态
+    // 存储在查找FOLLOW集合时非终结符的状态,仅在本类中使用
     private Map<String, Integer> status;
 
     //预测分析表，第一个String是非终结符，第二个是终结符
@@ -132,6 +132,8 @@ public class Grammar {
         String roolStr = "";
         Path path = Paths.get(filePath);
         Scanner scanner = new Scanner(path);
+
+        int cnt = 1; //用于记录规则号
         while (scanner.hasNextLine()){
             roolStr = scanner.nextLine();
             if(roolStr.equals("")){
@@ -140,24 +142,18 @@ public class Grammar {
 
             //获取规则
             Rool rool = new Rool();
-            String[] roolSplitByDot = roolStr.split("\\.",2);
-//            if(roolSplitByDot == null){
-//                System.out.println("space");
-//                System.exit(3);
-//            }
-            String roolNo = roolSplitByDot[0];
-            String content = roolSplitByDot[1].trim();
+            String roolNo = String.valueOf(cnt);
+            cnt++;
+            String content = roolStr;
 //            if(roolNo.equals("20")){
 //                System.out.println("here");
 //
 //            }
-            content = content.replace("GROUP BY","GROUP_BY");
-            content = content.replace("ORDER BY","ORDER_BY");
-            if(content.split("->",2).length == 1){
-                System.out.println(content);
-                System.out.println("规则错误");
-                System.exit(3);
-            }
+//            if(content.split("->",2).length == 1){
+//                System.out.println(content);
+//                System.out.println("规则错误");
+//                System.exit(3);
+//            }
             String left = content.split("->",2)[0].trim();
             String right = content.split("->",2)[1].trim();
             rool.setNo(roolNo);
@@ -165,37 +161,45 @@ public class Grammar {
             rool.setRight(right);
             rools.add(rool);
 
-            //获取非终结符，出现在左边的全是非终结符
+            //获取非终结符，出现在左边的全是非终结符，且非终结符只会在左边出现
             if(!nonEndSymbols.contains(left)){
                 nonEndSymbols.add(left);
             }
 
-            //获取终结符，先将右边的符号都放进去，再去掉非终结符,再保证只有一个符号,多个符号的第一个不是非终结符也加进去
+            //获取终结符，先将右边的符号都放进去，后面进行对右边的符号分割，去除终结符的操作
             if(!endSymbols.contains(right)){
                 endSymbols.add(right);
             }
         }
-        scanner.close();
 
-        List<String> otherEndSymbols = new ArrayList<>();
+        //对终结符，进行分割，去除终结符的操作
+        List<String> realEndSymbols = new ArrayList<>();
         Iterator<String> it = endSymbols.iterator();
         while (it.hasNext()){
             String endSymbol = it.next();
-            if(nonEndSymbols.contains(endSymbol)){
-                it.remove();
+
+            if(endSymbol.equals("{ blockItem }")){
+                int a = 3;
+            }
+
+            //如果它是非终结符，不用加入
+            if(nonEndSymbols.contains(endSymbol)){;
                 continue;
             }
             String[] endSymbolStr = endSymbol.split(" ");
+            //进行分割，找终结符
             if(endSymbolStr.length != 1){
-                for(int j = 0;j < endSymbolStr.length - 1;j++){
-                    if(!nonEndSymbols.contains(endSymbolStr[j]) && !endSymbols.contains(endSymbolStr[j])){
-                        otherEndSymbols.add(endSymbolStr[j]);
+                for(int j = 0;j < endSymbolStr.length;j++){
+                    if(!nonEndSymbols.contains(endSymbolStr[j]) && !realEndSymbols.contains(endSymbolStr[j])){
+                        realEndSymbols.add(endSymbolStr[j]);
                     }
                 }
                 it.remove();
+            }else {
+                realEndSymbols.add(endSymbol);
             }
         }
-        endSymbols.addAll(otherEndSymbols);
+        endSymbols = realEndSymbols;
 
         //对非终结符与终结符去重
         Set<String> set = new HashSet<>(nonEndSymbols);
@@ -246,11 +250,10 @@ public class Grammar {
     private List<String> getFirstBySingle(String symbol){
         Set<String> result = new HashSet<>();
 
-
-        if(this.endSymbol.contains(symbol)){
+        if(this.endSymbol.contains(symbol)){ //终结符，first集合是自身
             result.add(symbol);
 
-        } else if(this.nonEndSymbol.contains(symbol)){
+        } else if(this.nonEndSymbol.contains(symbol)){ //非终结符，是其所有产生式的first集合之和
             Set<String> rights = this.newRools.get(symbol);
             for(String right : rights){
                 result.addAll(this.getFirstBySingle(right));
@@ -259,6 +262,7 @@ public class Grammar {
         }else {//处理有几个符号的情况
             String[] patterns = symbol.split(" ");
             if(this.endSymbol.contains(patterns[0])){
+                //第一个符号是终结符，其first集合就是这个终结符
                 result.add(patterns[0]);
             } else {
                 for(int i = 0;i < patterns.length;i++){
@@ -418,7 +422,7 @@ public class Grammar {
     // 将某个符号集加入到某个非终结符的FOLLOW集合中
     private void addCharsToFOLLOW(Set<String> characterSet, String nonEndChar){
         Set<String> nonEndCharFollow = nonFollow.get(nonEndChar);
-        // 加入前先判断有没有在映射中了
+        // 加入前先判断有没有元素在映射中了
         if (nonEndCharFollow != null){
             nonEndCharFollow.addAll(characterSet);
         } else{
@@ -474,20 +478,6 @@ public class Grammar {
         for (String str : cStr){
             cList.add(str);
         }
-
-//        // 将右部分解为一个个的符号
-//        for (int i=0; i<value.length(); i++){
-//            if (value.equals("NULL")){
-//                cList.add(value);
-//                break;
-//            }
-//            if (i+1<value.length() && value.charAt(i+1) == '\''){
-//                cList.add(value.substring(i, i+2));
-//                i+=1;
-//            } else {
-//                cList.add(value.substring(i, i+1));
-//            }
-//        }
         return cList;
     }
 
@@ -609,16 +599,18 @@ public class Grammar {
         //遍历rool来看预测分析表
         for (Rool rool : this.rools){
 
-            List<String> first = this.getFirstBySingle(rool.getRight());
-            Set<String> follow = this.nonFollow.get(rool.getLeft());
+            List<String> first = this.getFirstBySingle(rool.getRight()); //右边的first集合
+            Set<String> follow = this.nonFollow.get(rool.getLeft()); //左边的follow集合，左边必定是非终结符
             String non = rool.getLeft();
 
+            //在终结符中加#,此时$还包含在endSymbol中
             List<String> newSym = new ArrayList<>(this.endSymbol);
             newSym.add("#");
 
 
             if(!first.contains("$")){
                 for(String end : newSym){
+                    //去掉endSymbol中的$的影响
                     if(end.equals("$")){
                         continue;
                     }
