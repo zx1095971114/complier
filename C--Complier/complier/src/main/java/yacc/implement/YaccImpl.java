@@ -34,7 +34,7 @@ public class YaccImpl implements Yacc {
      * @description 根据词法分析的结果，产生语法分析的结果，输入到文件中
      */
     public boolean printYacc(List<Token> tokens, String filePath) throws IOException {
-        String grammarFile = "D:\\大学\\课程\\编译原理\\My大作业\\C--Complier\\complier\\src\\main\\resources\\grammar.txt";
+        String grammarFile = "config/grammar.txt";
         Grammar grammar = Grammar.getGrammarByFile(grammarFile, "program");
 
         Stack<String> stack = new Stack<>();

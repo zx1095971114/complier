@@ -12,6 +12,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * @projectName: complier
@@ -23,32 +24,38 @@ import java.util.List;
  * @version: 1.0
  */
 public class Test {
-    public static void main(String[] args) throws IOException {
-        String inputFile = "D:\\大学\\课程\\编译原理\\My大作业\\C--Complier\\生成结果\\Test1\\00.txt";
-        String outputFileLex = "D:\\大学\\课程\\编译原理\\My大作业\\C--Complier\\生成结果\\Test1\\00_lexical.txt";
-
-        String outputFileYacc = "D:\\大学\\课程\\编译原理\\My大作业\\C--Complier\\生成结果\\Test1\\00_grammar.txt";
-//        String outputFileFirstAndFollow = "./src/main/myTest/testA/grammarTest1.tsv";
-
+    public static void doTest(String inputFile, String outputFileLex, String outputFileYacc) throws IOException {
         Yacc yacc = new YaccImpl();
         Lex lex = new LexImpl();
 
         if(lex.lexAnalysisToFile(inputFile,outputFileLex)){
-            System.out.println("ok1");
+            System.out.println("succeed in lexical analysis");
         }
-//        if(yacc.printFirstAndFollow(grammar,outputFileFirstAndFollow)){
-//            System.out.println("ok2");
-//        }
-
 
         String input = readFile(inputFile);
         List<Token> tokens = lex.lexAnalysis(input);
 
         if(yacc.printYacc(tokens,outputFileYacc)){
-            System.out.println("ok3");
+            System.out.println("succeed in parsing");
         }
+    }
 
 
+    public static void main(String[] args) throws IOException {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("请输入input文件路径(绝对路径)");
+        String inputFile = sc.nextLine();
+        System.out.println("\n请输入词法分析后文件输出路径(绝对路径)");
+        String outputFileLex = sc.nextLine();
+        System.out.println("\n请输入语法分析后文件输出路径(绝对路径)");
+        String outputFileYacc = sc.nextLine();
+        System.out.println("");
+
+//        String inputFile = "D:\\大学\\课程\\编译原理\\My大作业\\C--Complier\\生成结果\\Test1\\00.txt";
+//        String outputFileLex = "D:\\大学\\课程\\编译原理\\My大作业\\C--Complier\\生成结果\\Test1\\00_lexical.txt";
+//        String outputFileYacc = "D:\\大学\\课程\\编译原理\\My大作业\\C--Complier\\生成结果\\Test1\\00_grammar.txt";
+
+        doTest(inputFile, outputFileLex, outputFileYacc);
     }
 
     private static String readFile(String filePath) throws IOException {

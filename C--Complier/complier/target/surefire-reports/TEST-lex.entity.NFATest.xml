@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite tests="2" failures="0" name="lex.entity.NFATest" time="0" errors="0" skipped="0">
+  <properties>
+    <property name="idea.version" value="2022.1"/>
+    <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
+    <property name="sun.boot.library.path" value="C:\ProgrammingTools\Java\jdk1.8.0_331\jre\bin"/>
+    <property name="java.vm.version" value="25.331-b09"/>
+    <property name="java.vm.vendor" value="Oracle Corporation"/>
+    <property name="maven.multiModuleProjectDirectory" value="D:\大学\课程\编译原理\My大作业\C--Complier\complier"/>
+    <property name="java.vendor.url" value="http://java.oracle.com/"/>
+    <property name="path.separator" value=";"/>
+    <property name="guice.disable.misplaced.annotation.check" value="true"/>
+    <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM"/>
+    <property name="file.encoding.pkg" value="sun.io"/>
+    <property name="user.script" value=""/>
+    <property name="user.country" value="CN"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="sun.os.patch.level" value=""/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="user.dir" value="D:\大学\课程\编译原理\My大作业\C--Complier\complier"/>
+    <property name="java.runtime.version" value="1.8.0_331-b09"/>
+    <property name="java.awt.graphicsenv" value="sun.awt.Win32GraphicsEnvironment"/>
+    <property name="java.endorsed.dirs" value="C:\ProgrammingTools\Java\jdk1.8.0_331\jre\lib\endorsed"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.io.tmpdir" value="C:\Users\ZHOUXI~1\AppData\Local\Temp\"/>
+    <property name="line.separator" value="
+"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="user.variant" value=""/>
+    <property name="os.name" value="Windows 10"/>
+    <property name="maven.ext.class.path" value="D:\Programs\JetBrains\IntelliJ IDEA 2022.1\plugins\maven\lib\maven-event-listener.jar"/>
+    <property name="classworlds.conf" value="C:\ProgrammingTools\Maven\apache-maven-3.8.5\bin\m2.conf"/>
+    <property name="sun.jnu.encoding" value="GBK"/>
+    <property name="java.library.path" value="C:\ProgrammingTools\Java\jdk1.8.0_331\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;D:\Programs\jmeter\apache-jmeter-5.5\bin;D:\Programs\VMware\VMwareWorkStation\bin\;C:\ProgrammingTools\Java\jdk1.8.0_331\bin;C:\ProgrammingTools\Maven\apache-maven-3.8.5\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\ProgrammingTools\Python\Python39\;C:\ProgrammingTools\Python\Python39\Scripts;D:\frontTools\nodejs\;D:\Programs\mySql\mysql-8.0.32-winx64\bin;C:\ProgrammingTools\Ant\apache-ant-1.10.13\bin;C:\ProgrammingTools\MinGW\bin;C:\Users\ZhouXiang\AppData\Local\Programs\Fiddler;D:\fiddler;C:\Users\ZhouXiang\AppData\Local\Programs\Microsoft VS Code\bin;D:\jdk1.8.0_102\jdk1.8.0_102\bin;C:\ProgrammingTools\Maven\apache-maven-3.8.5\bin;C:\Users\ZhouXiang\AppData\Roaming\npm;D:\Programs\texLive\texlive\2023\bin\windows;;."/>
+    <property name="maven.conf" value="C:\ProgrammingTools\Maven\apache-maven-3.8.5/conf"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="java.class.version" value="52.0"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="os.version" value="10.0"/>
+    <property name="user.home" value="C:\Users\ZhouXiang"/>
+    <property name="user.timezone" value="Asia/Shanghai"/>
+    <property name="java.awt.printerjob" value="sun.awt.windows.WPrinterJob"/>
+    <property name="java.specification.version" value="1.8"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="user.name" value="ZhouXiang"/>
+    <property name="java.class.path" value="C:\ProgrammingTools\Maven\apache-maven-3.8.5\boot\plexus-classworlds-2.6.0.jar;C:\ProgrammingTools\Maven\apache-maven-3.8.5\boot\plexus-classworlds.license;D:\Programs\JetBrains\IntelliJ IDEA 2022.1\lib\idea_rt.jar"/>
+    <property name="java.vm.specification.version" value="1.8"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="java.home" value="C:\ProgrammingTools\Java\jdk1.8.0_331\jre"/>
+    <property name="sun.java.command" value="org.codehaus.classworlds.Launcher -Didea.version=2022.1 -s C:\ProgrammingTools\Maven\apache-maven-3.8.5\conf\settings.xml test"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="user.language" value="zh"/>
+    <property name="awt.toolkit" value="sun.awt.windows.WToolkit"/>
+    <property name="java.vm.info" value="mixed mode"/>
+    <property name="java.version" value="1.8.0_331"/>
+    <property name="java.ext.dirs" value="C:\ProgrammingTools\Java\jdk1.8.0_331\jre\lib\ext;C:\WINDOWS\Sun\Java\lib\ext"/>
+    <property name="sun.boot.class.path" value="C:\ProgrammingTools\Java\jdk1.8.0_331\jre\lib\resources.jar;C:\ProgrammingTools\Java\jdk1.8.0_331\jre\lib\rt.jar;C:\ProgrammingTools\Java\jdk1.8.0_331\jre\lib\sunrsasign.jar;C:\ProgrammingTools\Java\jdk1.8.0_331\jre\lib\jsse.jar;C:\ProgrammingTools\Java\jdk1.8.0_331\jre\lib\jce.jar;C:\ProgrammingTools\Java\jdk1.8.0_331\jre\lib\charsets.jar;C:\ProgrammingTools\Java\jdk1.8.0_331\jre\lib\jfr.jar;C:\ProgrammingTools\Java\jdk1.8.0_331\jre\classes"/>
+    <property name="java.vendor" value="Oracle Corporation"/>
+    <property name="maven.home" value="C:\ProgrammingTools\Maven\apache-maven-3.8.5"/>
+    <property name="file.separator" value="\"/>
+    <property name="java.vendor.url.bug" value="http://bugreport.sun.com/bugreport/"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="sun.desktop" value="windows"/>
+    <property name="sun.cpu.isalist" value="amd64"/>
+  </properties>
+  <testcase classname="lex.entity.NFATest" name="generateNFA[0]" time="0"/>
+  <testcase classname="lex.entity.NFATest" name="determineNFA[0]" time="0"/>
+</testsuite>

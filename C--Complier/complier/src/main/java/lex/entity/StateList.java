@@ -1,5 +1,8 @@
 package lex.entity;
 
+import utils.Util;
+
+import java.lang.reflect.Array;
 import java.util.*;
 
 /**
@@ -73,7 +76,11 @@ public class StateList {
      * @exception 注意比较前要保证两者是针对同一个状态转换机的StateList
      */
     public boolean equals(StateList stateList){
-        return stateList.getStates().equals(states);
+        List<State> states1 = stateList.getStates();
+        if(states1.size() == 0 && states.size() == 0){
+            return true;
+        }
+        return states1.equals(states);
     }
 
     /**
@@ -104,6 +111,43 @@ public class StateList {
 
         return new State(stateListId, start, endSymbol, stateMap);
     }
+
+
+    /**
+     * @param :
+     * @return State
+     * @author ZhouXiang
+     * @description 在要变为State的StateList和StateList来源的DFA中，将该状态集合转为对应的状态
+     * @exception 要求raw中的StateList已经编好号了
+     */
+    public State turn2State(List<StateList> raw, DFA dfa){
+        Map<String, Integer[]> stateMap = new HashMap<>();
+        Set<String> alphas = moveMap.keySet();
+        for(String alpha: alphas){
+
+            if(alpha.equals("!")){
+                int b = 3;
+            }
+
+            StateList stateList = null;
+            if(alpha.equals("$")){
+//                注意，空弧转换会包括自身，但是在StateList转为State时，经"$"不能包括自身
+//                stateList = this.moveWithBlankWithoutSelf(dfa);
+
+                //这个函数是转换最小化的dfa的，最小化的dfa没有空弧转换
+                continue;
+
+            } else {
+                Integer[] integers = new Integer[1];
+                integers[0] = this.getMinDfaId(alpha, raw, dfa);
+                stateMap.put(alpha, integers);
+            }
+
+        }
+
+        return new State(stateListId, start, endSymbol, stateMap);
+    }
+
 
     /**
      * @param :
@@ -195,26 +239,25 @@ public class StateList {
      * @param input:
      * @return StateList
      * @author ZhouXiang
-     * @description 面对某输出，在dfa中，除空弧转换以外的其他弧转换(注意结果中不能有重复的状态，且空弧的转换方式不同，空弧要找到没有新增状态为止)
+     * @description 面对某输入，求其在raw中对应的StateList的id，要求raw中的StateList已编号，dfa为raw的原始dfa
      * @exception
      */
-    public StateList moveWithInput(String input, DFA dfa){
+    public int getMinDfaId(String input, List<StateList> raw, DFA dfa){
         assert !input.equals("$");
         Set<State> stateSet = new HashSet<>();
 
         Integer[] stateIntegers = moveMap.get(input);
-        for(Integer stateInteger: stateIntegers){
-            State state = Util.getStateById(stateInteger, dfa.getAllStates());
-            if(state != null){
-                stateSet.add(Util.getStateById(stateInteger, dfa.getAllStates()));
+        Integer stateInteger = stateIntegers[0];
+        State state = Util.getStateById(stateInteger, dfa.getAllStates());
+        int minDfaId = 0;
+        for (StateList temp: raw){
+            if(temp.getStates().contains(state)){
+                minDfaId = temp.stateListId;
             }
         }
+        return minDfaId;
 
-        StateList list = new StateList(new ArrayList<>(stateSet));//没有加空弧转换的List
 
-        list.addStateList(list.moveWithBlank(dfa));
-
-        return list;
     }
 
     /**
@@ -327,6 +370,30 @@ public class StateList {
                         queue.offer(nextState);
                     }
                 }
+            }
+        }
+
+        return new StateList(new ArrayList<>(stateSet));
+    }
+
+
+    public StateList moveWithBlankWithoutSelf(DFA dfa){
+        Set<State> stateSet = new HashSet<>();
+        for (State state: states){
+            Queue<State> queue = new LinkedList<>(); //用队列来消除递归
+            queue.offer(state);
+//            stateSet.add(state); //空弧转换要包括自身
+
+            while (!queue.isEmpty()){
+                State stackState = queue.poll();
+                State nextState = dfa.move(stackState, "$");
+//                StateList nextStates = dfa.move(stackState, "$");
+
+                if(!stateSet.contains(nextState)){
+                    stateSet.add(nextState);
+                    queue.offer(nextState);
+                }
+
             }
         }
 

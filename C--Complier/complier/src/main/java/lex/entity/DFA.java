@@ -1,5 +1,8 @@
 package lex.entity;
 
+import javafx.util.Pair;
+import utils.Util;
+
 import java.util.*;
 
 /**
@@ -114,10 +117,10 @@ public class DFA {
      * @param :
      * @return DFA
      * @author ZhouXiang
-     * @description 将原本的DFA最小化
+     * @description 将原本的DFA最小化，正确答案初始版本，未真正实现最小化
      * @exception
      */
-    public void minimizeDFA(){
+    public void minimizeDFADemo(){
         //建立新状态
         String[] newEndSymbol = new String[]{"OP"};
         Map<String, Integer[]> newMap = new HashMap<>();
@@ -185,35 +188,167 @@ public class DFA {
             map.remove("$");
         }
 
+
     }
 
-//    //使用某字母对目前的dfa(List<StateList>)进行一次划分,返回划分后的结果
-//    private List<StateList> separate(List<StateList> curList, String input){
-//        Queue<StateList> queue = new LinkedList<>();
-//        for (StateList list: curList){
-//            queue.offer(list);
-//        }
-//        List<StateList> oldList = new ArrayList<>(curList);
+    public DFA minimizeDFA(){
+        List<StateList> curList = new ArrayList<>();
+        //根据endSymbol的不同，对State进行第一次划分
+        //因为java对String[]的比较未重写，所以要将String[]转为String
+        Map<State, String> map =new HashMap<>();
+        for (State state: this.allStates){
+            StringBuilder sb = new StringBuilder();
+            for(String str: state.getEndSymbol()){
+                sb.append(str + "_");
+            }
+            map.put(state, sb.toString());
+        }
+
+        Set<String> set = new HashSet<>(map.values());
+        for(String str: set){
+            List<State> list = new ArrayList<>();
+            for(Map.Entry<State, String> entry: map.entrySet()){
+                State key = entry.getKey();
+                String value = entry.getValue();
+                if(value.equals(str)){
+                    list.add(key);
+                }
+            }
+            curList.add(new StateList(list));
+        }
+
+        for(String input: alpha){
+            if(input.equals("$")){
+                continue;
+            }
+
+//            if(input.equals("=")){
+//                int a = 0;
+//            }
+
+            curList = separate(curList, input);
+        }
+
+        List<StateList> result = check(curList);
+
+        //将StateList转为State
+        List<State> dfa = new ArrayList<>();
+        int cnt = 1;
+        for(StateList stateList: result){
+            stateList.setStateListId(cnt);
+            cnt++;
+        }
+
+        for (StateList stateList: result){
+
+            if(result.get(3).equals(stateList)){
+                int a = 3;
+            }
+
+            dfa.add(stateList.turn2State(result, this));
+        }
+
+        return DFA.getDFAInstance(dfa);
+    }
+
+    //检查，直到不发生改变
+    private List<StateList> check(List<StateList> curList){
+        List<StateList> oldList = curList;
+        for(String input: alpha){
+            if(input.equals("$")){
+                continue;
+            }
+            curList = separate(curList, input);
+        }
+        if(!oldList.equals(curList)){
+            check(curList);
+        }
+        return oldList;
+    }
+
+    //使用某字母对目前的dfa(List<StateList>)进行一次划分,返回划分后的结果
+    private List<StateList> separate(List<StateList> curList, String input){
+        List<StateList> finalStateList = new ArrayList<>();
+
+        Queue<StateList> queue = new LinkedList<>();
+        for (StateList list: curList){
+            queue.offer(list);
+        }
+        List<StateList> oldList = new ArrayList<>(curList);
+
+        while (!queue.isEmpty()){
+            StateList tempStateList = queue.poll();
+
+            if(tempStateList.getStates().size() == 4){
+                int a = 0;
+            }
+
+            //根据a弧转换，对tempStateList中的状态进行分类
+            //tempStateList中的每一个State，会对应到一个StateList
+            //取StateList为key，若不用划分，应只有一个键值对，否则，就要根据value划分成不同的StateList
+            Map<StateList, List<State>> map = new HashMap<>();
+            for(State state: tempStateList.getStates()){
+                StateList next = state.getMove(this, input);
+
+                Pair<StateList, List<State>> pair = personalGetOrDefault(map, next, new ArrayList<>());
+                List<State> list = pair.getValue();
+                list.add(state);
+                map.put(pair.getKey(), list);
+//                List<State> list = null;
+//                if(next.getStates().size() == 0){ // 为0时getOrDefault不能准确识别两个的key是相同的，所以要单独处理
+//                    boolean isChanged = false;
+//                    for(Map.Entry<StateList, List<State>> entry: map.entrySet()){
+//                        StateList key = entry.getKey();
+//                        List<State> value = entry.getValue();
+//                        if(key.getStates().size() == 0){
+//                            list = value;
+//                            list.add(state);
+//                            isChanged = true;
+//                            continue;
+//                        }
+//                    }
+//                    if(!isChanged){
+//                        list = new ArrayList<>();
+//                        list.add(state);
+//                        map.put(next, list);
+//                    }
 //
-//        while (!queue.isEmpty()){
-//            StateList tempStateList = queue.poll();
 //
-//            StateList temp = tempStateList.moveWithInput(input, this);
-//            //看a弧转换后的结果在不在oldList里面
-//            boolean contain = false;
-//            for (StateList list: oldList){
-//                if(temp.equals(list)){
-//                    contain = true;
-//                    break;
+//                }else {
+//                    list = map.getOrDefault(next, new ArrayList<>());
+//                    list.add(state);
+//                    map.put(next, list);
 //                }
-//            }
-//
-//            if(contain){
-//
-//            }
-//        }
-//
-//        return null;
-//    }
+
+            }
+
+            if(map.size() == 1){//包含在oldList里面，说明是最终分组
+                finalStateList.add(tempStateList);
+            }else {//不包含在oldList里面，删除原来的分组，创建新分组，将新分组入队
+                oldList.remove(tempStateList);
+                for(List<State> stateList: map.values()){
+                    StateList stateList1 = new StateList(stateList);
+                    oldList.add(stateList1);
+                    queue.add(stateList1);
+                }
+            }
+        }
+
+        return finalStateList;
+    }
+
+    //实现getOrDefault功能，用api的无法比较StateList是否相同
+    private static Pair<StateList, List<State>> personalGetOrDefault(Map<StateList, List<State>> map, StateList testKey, List<State> defaultResult){
+        for(Map.Entry<StateList, List<State>> entry: map.entrySet()){
+            StateList key = entry.getKey();
+            List<State> value = entry.getValue();
+
+            if(testKey.equals(key)){
+                return new Pair<>(key, value);
+            }
+        }
+
+        return new Pair<>(testKey, defaultResult);
+    }
 
 }

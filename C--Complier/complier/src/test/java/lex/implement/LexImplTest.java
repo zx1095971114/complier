@@ -15,13 +15,13 @@ public class LexImplTest {
 
     @Test
     public void lexAnalysisToFile() throws IOException {
-        String dir = "D:\\大学\\课程\\编译原理\\My大作业\\C--Complier\\complier\\src\\test\\resources";
+        String dir = "./src/test/resources";
         Lex lex = new LexImpl();
 
         for(int i = 0; i < 5; i++){
-            String inputFile = dir + "\\" + i + "\\" + i + ".txt";
-            String testFile = dir + "\\" + i + "\\lexical.txt";
-            String expectedFile = dir + "\\" + i + "\\" + i + "_lexical.txt";
+            String inputFile = dir + "/" + i + "/" + i + ".txt";
+            String testFile = dir + "/" + i + "/lexical.txt";
+            String expectedFile = dir + "/" + i + "/" + i + "_lexical.txt";
 
             lex.lexAnalysisToFile(inputFile, testFile);
 

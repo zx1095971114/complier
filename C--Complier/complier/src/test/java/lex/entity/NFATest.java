@@ -8,6 +8,8 @@ import org.junit.runners.Parameterized;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -19,9 +21,9 @@ public class NFATest {
     private NFA nfa;
 
     @Parameterized.Parameters
-    public static Collection<Object[]> getData() throws FileNotFoundException {
-        String fileNameTest1 = "D:\\大学\\课程\\编译原理\\My大作业\\C--Complier\\complier\\src\\test\\resources\\initialTest.csv";
-        String fileNameTest2 = "D:\\大学\\课程\\编译原理\\My大作业\\C--Complier\\complier\\src\\test\\resources\\determineTest.csv";
+    public static Collection<Object[]> getData() throws IOException {
+        String fileNameTest1 = "./src/test/resources/initialTest.csv";
+        String fileNameTest2 = "./src/test/resources/determineTest.csv";
 
         List<Map<String, Integer[]>> testList1 = new ArrayList<>();
         Scanner scanner = new Scanner(new FileReader(fileNameTest1));
@@ -56,7 +58,7 @@ public class NFATest {
             testList2.add(map);
         }
 
-        String fileNameSrc = "D:\\大学\\课程\\编译原理\\My大作业\\C--Complier\\complier\\src\\main\\resources\\initialStateTable.csv";
+        String fileNameSrc = "config/initialStateTable.csv";
         NFA nfa = NFA.generateNFA(fileNameSrc);
 
         Object[] test = new Object[3];

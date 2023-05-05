@@ -2,6 +2,7 @@ package yacc.entity;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
@@ -130,8 +131,9 @@ public class Grammar {
         List<String> nonEndSymbols = new ArrayList<>();
         List<String> endSymbols = new ArrayList<>();
         String roolStr = "";
-        Path path = Paths.get(filePath);
-        Scanner scanner = new Scanner(path);
+
+        InputStream in = ClassLoader.getSystemResourceAsStream(filePath);
+        Scanner scanner = new Scanner(in);
 
         int cnt = 1; //用于记录规则号
         while (scanner.hasNextLine()){

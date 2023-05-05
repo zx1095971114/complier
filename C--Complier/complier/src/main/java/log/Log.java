@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
  */
 @Slf4j
 public class Log {
+    private static final Logger logger = LoggerFactory.getLogger(Log.class);
     /**
      * @param info:
      * @return void
@@ -25,4 +26,8 @@ public class Log {
     public static void errorLog(String info, Logger logger){
         logger.error(info);
     }
+
+//    public static void main(String[] args) {
+//        logger.error("1");
+//    }
 }

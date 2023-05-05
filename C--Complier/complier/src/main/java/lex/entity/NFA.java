@@ -1,7 +1,12 @@
 package lex.entity;
 
+import utils.Util;
+
+import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.*;
 
 /**
@@ -108,9 +113,15 @@ public class NFA {
      * @description 获取初始的NFA
      * @exception
      */
-    public static NFA generateNFA(String fileName) throws FileNotFoundException {
+    public static NFA generateNFA(String fileName) throws IOException {
         List<State> stateList = new ArrayList<>();
-        Scanner scanner = new Scanner(new FileReader(fileName));
+
+        Util util = new Util();
+//        URL url = ClassLoader.getSystemResource("");
+//        String b = url.getPath();
+        InputStream in = ClassLoader.getSystemResourceAsStream(fileName);
+        Scanner scanner = new Scanner(in);
+//        Scanner scanner = new Scanner(in);
         String[] attribute = null; //存所有状态转移表的所有属性，即initialStateTable的第一行
         if(scanner.hasNextLine()){
             attribute = scanner.nextLine().split(",");

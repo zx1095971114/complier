@@ -1,5 +1,7 @@
 package lex.entity;
 
+import utils.Util;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -55,19 +57,27 @@ public class State {
     /**
      * @param fa 状态转换机
      * @param input 面对的转移
-     * @return List<State>
+     * @return StateList
      * @author ZhouXiang
-     * @description 求其在某个状态转换机中转移的闭包
+     * @description 求其在DFA中转移的闭包
      * @exception
      */
-    public List<State> getMove(List<State> fa, String input){
+    public StateList getMove(DFA dfa, String input){
+        List<State> fa = dfa.getAllStates();
+
         Integer[] bagInteger = moveMap.get(input);
         List<State> bag = new ArrayList<>();
         for(Integer cnt: bagInteger){
-            bag.add(Util.getStateById(cnt, fa));
+            State state = Util.getStateById(cnt, fa);
+            if(state != null){
+                bag.add(Util.getStateById(cnt, fa));
+            }
         }
-        return bag;
+
+        return new StateList(bag);
+
     }
+
 }
 
 

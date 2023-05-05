@@ -34,7 +34,7 @@ public class LexImpl implements Lex {
      * @author ZhouXiang
      * @description 将输入的字符串经过词法分析转为对应的token序列。输出符号表
      */
-    public List<Token> lexAnalysis(String input) throws FileNotFoundException {
+    public List<Token> lexAnalysis(String input) throws IOException {
         List<Token> tokens = new ArrayList<>();
         //加空格是为了保证能读取最后的token
         //当最后的字符的currentState为起始状态时，证明最后是由空格和\n组成的符号串，不该加入tokens，加入" "无影响
@@ -43,10 +43,14 @@ public class LexImpl implements Lex {
         input = input + " ";
 
         //获取dfa
-        String fileName = "D:\\大学\\课程\\编译原理\\My大作业\\C--Complier\\complier\\src\\main\\resources\\initialStateTable.csv";
+//        String fileName = "D:\\大学\\课程\\编译原理\\My大作业\\C--Complier\\complier\\src\\main\\resources\\initialStateTable.csv";
+//        String fileName = "./src/main/resources/config/initialStateTable.csv";
+        //generateNFA是静态方法，用的是ClassLoader.getSystemResourceAsStream(fileName)获取输入流，前面不加/
+        String fileName = "config/initialStateTable.csv";
+
         NFA nfa = NFA.generateNFA(fileName);
         DFA dfa = nfa.determineNFA();
-        dfa.minimizeDFA();
+        dfa = dfa.minimizeDFA();
 
         State currentState = dfa.getStartState(); //字符当前所处的状态
         int currentNum = 0; //当前识别到哪一个字符

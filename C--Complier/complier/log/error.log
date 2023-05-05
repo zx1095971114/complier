@@ -1,0 +1,12 @@
+2023-04-28 20:48:39.088 [main] ERROR log.Log - error test
+2023-04-28 20:50:49.056 [main] ERROR log.Log - test2
+2023-04-28 20:53:58.909 [main] ERROR TempTest - test2
+2023-04-28 20:55:05.620 [main] ERROR TempTest - test3
+2023-04-29 14:46:51.216 [main] ERROR yacc.implement.YaccImpl - 在预测分析表中找不到对应的非终结符和终结符，非终极符: blockItem， 终结符: }
+2023-04-29 14:51:59.202 [main] ERROR yacc.implement.YaccImpl - 在预测分析表中找不到对应的非终结符和终结符，非终极符: blockItem， 终结符: }
+2023-04-29 14:56:31.069 [main] ERROR yacc.implement.YaccImpl - 在预测分析表中找不到对应的非终结符和终结符，非终结符: blockItem， 终结符: }
+2023-04-29 14:58:34.138 [main] ERROR yacc.implement.YaccImpl - 在预测分析表中找不到对应的非终结符和终结符，非终结符: blockItem， 终结符: }
+2023-04-29 14:59:24.725 [main] ERROR yacc.implement.YaccImpl - 在预测分析表中找不到对应的非终结符和终结符，非终结符: blockItem， 终结符: }
+2023-04-29 15:27:20.854 [main] ERROR yacc.implement.YaccImpl - 在预测分析表中找不到对应的非终结符和终结符，非终结符: blockItem， 终结符: }
+2023-05-05 20:12:41.599 [main] ERROR log.Log - 1
+2023-05-05 20:16:15.806 [main] ERROR log.Log - 1

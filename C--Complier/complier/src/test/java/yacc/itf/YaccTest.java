@@ -5,16 +5,11 @@ import lex.implement.LexImpl;
 import lex.itf.Lex;
 import org.junit.Assert;
 import org.junit.Test;
-import utils.Util;
-import yacc.entity.Grammar;
+import utilsTest.Util;
 import yacc.implement.YaccImpl;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Scanner;
-
-import static org.junit.Assert.*;
 
 public class YaccTest {
 
