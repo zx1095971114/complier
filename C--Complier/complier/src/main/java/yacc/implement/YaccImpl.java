@@ -61,9 +61,10 @@ public class YaccImpl implements Yacc {
             String now = analysis.getStackSym();
             String face = analysis.getFaceSym();
 
-            if(now.equals("compUnit") && !face.equals("void")){
-                int a = 3;
-            }
+            //调试使用
+//            if(now.equals("compUnit") && !face.equals("void")){
+//                int a = 3;
+//            }
 
             if(now.equals(face)){
                 if(now.equals("#")){

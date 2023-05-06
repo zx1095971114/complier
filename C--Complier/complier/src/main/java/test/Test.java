@@ -56,6 +56,17 @@ public class Test {
 //        String outputFileYacc = "D:\\大学\\课程\\编译原理\\My大作业\\C--Complier\\生成结果\\Test1\\00_grammar.txt";
 
         doTest(inputFile, outputFileLex, outputFileYacc);
+
+//        printPredictTable();
+    }
+
+
+    //打印预测分析表使用
+    public static void printPredictTable() throws IOException {
+        String grammarFile = "config/grammar.txt";
+        Grammar grammar = Grammar.getGrammarByFile(grammarFile, "program");
+        String out = "D:\\大学\\课程\\编译原理\\My大作业\\C--Complier\\生成结果\\predictTable.csv";
+        grammar.printPredictTable(out);
     }
 
     private static String readFile(String filePath) throws IOException {

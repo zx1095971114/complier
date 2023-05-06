@@ -29,6 +29,13 @@ public class DFA {
         endStates = new ArrayList<>();
     }
 
+    /**
+     * @param states:
+     * @return DFA
+     * @author ZhouXiang
+     * @description 通过一个State列表获取一个DFA实例
+     * @exception
+     */
     public static DFA getDFAInstance(List<State> states){
         DFA dfa = new DFA();
         dfa.allStates = states;
@@ -191,6 +198,13 @@ public class DFA {
 
     }
 
+    /**
+     * @param :
+     * @return DFA
+     * @author ZhouXiang
+     * @description 将所给的DFA最小化
+     * @exception
+     */
     public DFA minimizeDFA(){
         List<StateList> curList = new ArrayList<>();
         //根据endSymbol的不同，对State进行第一次划分
@@ -241,9 +255,9 @@ public class DFA {
 
         for (StateList stateList: result){
 
-            if(result.get(3).equals(stateList)){
-                int a = 3;
-            }
+//            if(result.get(3).equals(stateList)){
+//                int a = 3;
+//            }
 
             dfa.add(stateList.turn2State(result, this));
         }
@@ -279,9 +293,10 @@ public class DFA {
         while (!queue.isEmpty()){
             StateList tempStateList = queue.poll();
 
-            if(tempStateList.getStates().size() == 4){
-                int a = 0;
-            }
+            //调试用
+//            if(tempStateList.getStates().size() == 4){
+//                int a = 0;
+//            }
 
             //根据a弧转换，对tempStateList中的状态进行分类
             //tempStateList中的每一个State，会对应到一个StateList
@@ -294,31 +309,6 @@ public class DFA {
                 List<State> list = pair.getValue();
                 list.add(state);
                 map.put(pair.getKey(), list);
-//                List<State> list = null;
-//                if(next.getStates().size() == 0){ // 为0时getOrDefault不能准确识别两个的key是相同的，所以要单独处理
-//                    boolean isChanged = false;
-//                    for(Map.Entry<StateList, List<State>> entry: map.entrySet()){
-//                        StateList key = entry.getKey();
-//                        List<State> value = entry.getValue();
-//                        if(key.getStates().size() == 0){
-//                            list = value;
-//                            list.add(state);
-//                            isChanged = true;
-//                            continue;
-//                        }
-//                    }
-//                    if(!isChanged){
-//                        list = new ArrayList<>();
-//                        list.add(state);
-//                        map.put(next, list);
-//                    }
-//
-//
-//                }else {
-//                    list = map.getOrDefault(next, new ArrayList<>());
-//                    list.add(state);
-//                    map.put(next, list);
-//                }
 
             }
 

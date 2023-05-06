@@ -3,6 +3,8 @@ package utils;
 import lex.entity.State;
 import lex.entity.StateList;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -92,6 +94,20 @@ public class Util {
             }
         }
         return str;
+    }
+
+    /**
+     * @param filePath:
+     * @param content:
+     * @return void
+     * @author ZhouXiang
+     * @description 以追加的方式向文件中写入
+     * @exception
+     */
+    public static void  writeFIle(String filePath, String content) throws IOException {
+        BufferedWriter bw = new BufferedWriter(new FileWriter(filePath));
+        bw.write(content);
+        bw.close();
     }
 
     /**

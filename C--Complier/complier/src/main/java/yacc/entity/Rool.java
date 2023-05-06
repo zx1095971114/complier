@@ -12,8 +12,11 @@ import java.util.List;
  * @version: 1.0
  */
 public class Rool {
+    //规则序号
     private String no;
+    //规则左部
     private String left;
+    //规则右部
     private String right;
 
 

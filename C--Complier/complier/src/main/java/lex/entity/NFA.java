@@ -107,21 +107,18 @@ public class NFA {
     }
 
     /**
-     * @param :fileName NFA表文件所在路径
+     * @param :fileName 初始设计的NFA表文件所在路径
      * @return NFA
      * @author ZhouXiang
-     * @description 获取初始的NFA
-     * @exception
+     * @description 获取初始的NFA，从文件中获取nfa
+     * @exception 文件IO异常
      */
     public static NFA generateNFA(String fileName) throws IOException {
         List<State> stateList = new ArrayList<>();
 
-        Util util = new Util();
-//        URL url = ClassLoader.getSystemResource("");
-//        String b = url.getPath();
         InputStream in = ClassLoader.getSystemResourceAsStream(fileName);
         Scanner scanner = new Scanner(in);
-//        Scanner scanner = new Scanner(in);
+
         String[] attribute = null; //存所有状态转移表的所有属性，即initialStateTable的第一行
         if(scanner.hasNextLine()){
             attribute = scanner.nextLine().split(",");

@@ -1,5 +1,7 @@
 package yacc.entity;
 
+import utils.Util;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,9 +49,6 @@ public class Grammar {
 //        }
         this.first = calculateFirst();
         calculateFOLLOW();
-//        int i = 1;
-//        i++;
-
         calculateMap();
     }
 
@@ -252,10 +251,10 @@ public class Grammar {
     private List<String> getFirstBySingle(String symbol){
         Set<String> result = new HashSet<>();
 
-        if(this.endSymbol.contains(symbol)){ //终结符，first集合是自身
+        if(this.endSymbol.contains(symbol)){ //单个终结符，first集合是自身
             result.add(symbol);
 
-        } else if(this.nonEndSymbol.contains(symbol)){ //非终结符，是其所有产生式的first集合之和
+        } else if(this.nonEndSymbol.contains(symbol)){ //单个非终结符，其First集合是其所在的，所有产生该非终结符的规则的右部，的first集合之和
             Set<String> rights = this.newRools.get(symbol);
             for(String right : rights){
                 result.addAll(this.getFirstBySingle(right));
@@ -406,7 +405,6 @@ public class Grammar {
 //        isSearch.put(symbol,false);
 //        return this.nonFollow.get(symbol);
 //    }
-// 将某个符号集加入到某个非终结符的FOLLOW集合中
 
     // 将某个符号加入到某个非终结符的FOLLOW集合中
     private void addCharToFOLLOW(String character, String nonEndChar){
@@ -642,7 +640,6 @@ public class Grammar {
             }
         }
 
-//        int j = 0;
     }
 
     /**
@@ -661,4 +658,42 @@ public class Grammar {
 
     }
 
+    /**
+     * @param filePath:
+     * @return void
+     * @author ZhouXiang
+     * @description 打印该文法的预测分析表
+     * @exception
+     */
+    public void printPredictTable(String filePath) throws IOException {
+        StringBuilder content = new StringBuilder();
+        Map<String,Map<String, Rool>> map = this.predictMap;
+        content.append(",");
+        List<String> nonSym = new ArrayList<>(map.keySet());
+        List<Map<String, Rool>> list = new ArrayList<>(map.values());
+        List<String> endSym = new ArrayList<>(list.get(0).keySet());
+
+        for (String str: endSym){
+//            System.out.println(str + " ");
+
+            str = str.replaceAll(",", "dot");
+            content.append(str + ",");
+        }
+        content.append("\n");
+
+        for (String non: nonSym){
+            content.append(non + ",");
+            Map<String, Rool> map1 = map.get(non);
+            for (String end: endSym){
+                Rool rool = map1.get(end);
+                String left = rool.getLeft();
+                String right = rool.getRight().replaceAll(",", "dot");
+
+                content.append(left + " -> " + right + ",");
+            }
+            content.append("\n");
+        }
+
+        Util.writeFIle(filePath, content.toString());
+    }
 }

@@ -19,7 +19,7 @@ public interface Lex {
      * @param input: 输入的字符串
      * @return List<Token> 识别出的符号表
      * @author ZhouXiang
-     * @description 将输入的字符串经过词法分析转为对应的token序列。输出符号表
+     * @description 将输入的字符串经过词法分析转为对应的token序列，输出Token序列
      */
     public List<Token> lexAnalysis(String input) throws IOException;
 
