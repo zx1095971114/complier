@@ -90,7 +90,7 @@ D:\大学\课程\编译原理\MY大作业\C--COMPLIER\COMPLIER
 
 NFA的设计图如下所示
 
-![初始的NFA设计图](C--Complier\文档\images\初始状态转换图.png)
+![初始的NFA设计图](C--Complier/文档/images/初始状态转换图.png)
 
 由此设计出的initialTable如下图所示
 
@@ -281,7 +281,7 @@ NFA实体类,用来描述一个NFA
 
 从initialTable.csv文件中获取NFA主要步骤如下
 
-![从文件中获取NFA流程图](C--Complier\文档\images\从文件中获取NFA流程图.png)
+![从文件中获取NFA流程图](C--Complier/文档/images/从文件中获取NFA流程图.png)
 
 具体实现代码在lex.entity.NFA.generateNFA(String fileName)
 
@@ -419,7 +419,7 @@ public DFA determineNFA(){
 
 在本项目中，NFA确定化后的状态转换图为
 
-![NFA确定化后状态转换图](C--Complier\文档\images\确定化后的状态转换图.png)
+![NFA确定化后状态转换图](C--Complier/文档/images/确定化后的状态转换图.png)
 
 ##### 2.4.3 NFA的最小化
 
@@ -574,7 +574,7 @@ public DFA minimizeDFA(){
 
 在本项目中，DFA确定化后的状态转换图如下
 
-![DFA最小化化状态转换图](C--Complier\文档\images\最小化后状态转换图.png)
+![DFA最小化化状态转换图](C--Complier/文档/images/最小化后状态转换图.png)
 
 ##### 2.4.4 Token序列的生成
 
@@ -731,7 +731,7 @@ public List<Token> lexAnalysis(String input) throws IOException {
 
 `[待测代码中的单词符号] [TAB] [单词符号种别] `
 
-![符号表输出格式](C--Complier\文档\images\符号表输出格式.png)
+![符号表输出格式](C--Complier/文档/images/符号表输出格式.png)
 
 其中，单词符号种别为 KW（关键字）、OP（运算符）、SE（界符）、IDN（标识符）INT（整形数）；单词符号内容第一个维度为其种别，第二个维度为其属性。[TAB]为一个制表符‘\t’
 
@@ -745,7 +745,7 @@ Token序列是一个Token组成的List，即`List<Token>`，它是`lexAnalysis(S
 
 语法分析器工作流程如下
 
-![语法分析器工作流程图](C--Complier\文档\images\语法分析器流程图.png)
+![语法分析器工作流程图](C--Complier/文档/images/语法分析器流程图.png)
 
    
 
@@ -1536,7 +1536,7 @@ public boolean printYacc(List<Token> tokens, String filePath) throws IOException
 
 `[栈顶符号]#[面临输入符号][TAB][执行动作]`
 
-![语法分析输出格式](C--Complier\文档\images\语法分析输出格式.png)
+![语法分析输出格式](C--Complier/文档/images/语法分析输出格式.png)
 
 ### 四. 程序检测
 
