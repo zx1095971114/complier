@@ -21,7 +21,7 @@ public class YaccTest {
 
         for(int i = 0; i < 4; i++){
             String inputFile = dir + "\\" + i + "\\" + i + ".txt";
-            String testFile = dir + "\\" + i + "\\grammar.txt";
+            String testFile = dir + "\\" + i + "\\38gra.txt";
             String expectedFile = dir + "\\" + i + "\\" + i + "_grammar.txt";
 
             String input = Util.readFile(inputFile);

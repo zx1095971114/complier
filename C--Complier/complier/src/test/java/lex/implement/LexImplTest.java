@@ -17,10 +17,9 @@ public class LexImplTest {
     public void lexAnalysisToFile() throws IOException {
         String dir = "./src/test/resources";
         Lex lex = new LexImpl();
-
         for(int i = 0; i < 5; i++){
             String inputFile = dir + "/" + i + "/" + i + ".txt";
-            String testFile = dir + "/" + i + "/lexical.txt";
+            String testFile = dir + "/" + i + "/38lex.txt";
             String expectedFile = dir + "/" + i + "/" + i + "_lexical.txt";
 
             lex.lexAnalysisToFile(inputFile, testFile);
@@ -42,6 +41,5 @@ public class LexImplTest {
             String expected = expectedBuilder.toString();
             assertEquals(expected, test);
         }
-
     }
 }
