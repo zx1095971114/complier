@@ -1,0 +1,8 @@
+program#void	reduction
+compUnit#void	reduction
+funcDef#void	reduction
+funcType#void	reduction
+void#void	move
+IDN#IDN	move
+(#(	move
+funcFParams#{	error
